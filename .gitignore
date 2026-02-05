@@ -1,0 +1,31 @@
+# --- Visual Studio temporary files ---
+.vs/
+*.user
+*.suo
+*.ipch
+*.aps
+
+# --- Build results ---
+[Dd]ebug/
+[Rr]elease/
+x64/
+[Aa][Rr][Mm]/
+build/
+bin/
+obj/
+
+# --- Intermediate files ---
+*.obj
+*.pdb
+*.idb
+*.ilk
+*.pch
+*.tlog
+*.log
+*.res
+*.sbr
+
+# --- Other ---
+Thumbs.db
+*.bak
+*.tmp

@@ -1,0 +1,104 @@
+[11/26/25 18:35:16] : Unable to get session from Manager
+Error: 0x80004005
+[11/26/25 18:58:03] : Unable to get session from Manager
+Error: 0x80004005
+[11/26/25 18:58:56] : Unable to get session from Manager
+Error: 0x80004005
+[11/26/25 19:19:51] : Unable to get session from Manager
+Error: 0x80004005
+[11/26/25 19:20:29] : Unable to get session from Manager
+Error: 0x80004005
+[11/26/25 19:20:59] : Unable to get session from Manager
+Error: 0x80004005
+[11/26/25 19:21:38] : Unable to get session from Manager
+Error: 0x80004005
+[11/30/25 10:18:06] : [11/30/25 10:18:08] : [11/30/25 10:18:09] : [11/30/25 10:18:09] : [11/30/25 10:18:09] : [11/30/25 10:18:10] : [11/30/25 10:18:10] : [11/30/25 10:18:10] : [11/30/25 10:18:11] : [11/30/25 10:18:11] : [11/30/25 10:18:11] : [11/30/25 10:18:12] : [11/30/25 10:18:12] : [11/30/25 10:18:12] : [11/30/25 10:18:12] : [11/30/25 10:18:13] : [11/30/25 12:06:56] : [11/30/25 12:06:59] : [11/30/25 12:07:00] : [11/30/25 12:07:00] : [11/30/25 12:07:00] : [11/30/25 12:07:00] : [11/30/25 12:07:00] : [11/30/25 12:07:00] : [11/30/25 12:07:01] : [11/30/25 12:07:01] : [11/30/25 12:07:01] : [11/30/25 12:07:01] : [11/30/25 12:07:01] : [11/30/25 12:07:01] : [11/30/25 12:07:01] : [11/30/25 12:07:02] : [11/30/25 17:31:47] : [11/30/25 17:31:48] : [11/30/25 17:31:49] : [11/30/25 17:31:49] : [11/30/25 17:31:49] : [11/30/25 17:31:49] : [11/30/25 17:31:50] : [11/30/25 17:31:50] : [11/30/25 17:31:50] : [11/30/25 17:31:50] : [11/30/25 17:31:51] : [11/30/25 17:31:51] : [11/30/25 17:31:51] : [11/30/25 17:31:51] : [11/30/25 17:31:52] : [11/30/25 17:31:52] : [12/21/25 19:24:31] : Error: No results found.
+[12/21/25 19:24:59] : Error: No results found.
+[12/21/25 19:25:43] : Error when updating.
+Error: 0x80040e2f
+[12/21/25 19:28:30] : Error when updating.
+Error: 0x80040e2f
+[12/21/25 19:46:14] : Error: No results found.
+[12/22/25 09:51:31] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 09:51:35] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 09:51:38] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 10:10:25] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 10:10:30] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 10:32:09] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 12:28:40] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 12:28:46] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 12:28:55] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 17:19:25] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 17:49:09] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 17:49:14] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 18:05:48] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 18:06:00] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 18:06:05] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 18:10:23] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 18:10:27] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 18:10:55] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 18:10:58] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 20:29:49] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 20:31:56] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 20:35:53] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 20:35:58] : Error: Update counter mismatch (Data changed by another user).
+[12/22/25 20:40:07] : Error: Update counter mismatch (Data changed by another user).
+[12/26/25 19:21:05] : Error when inserting.
+Error: 0x80040e2f
+[12/26/25 19:21:11] : [12/26/25 19:26:11] : Error when inserting.
+Error: 0x80040e2f
+[12/26/25 19:28:03] : [12/26/25 19:50:39] : [12/26/25 20:10:15] : Error when inserting.
+Error: 0x80040e2f
+[12/26/25 20:10:15] : [12/26/25 20:12:02] : Error when inserting.
+Error: 0x80040e2f
+[12/29/25 18:07:45] : Error when executing query.
+ Error: 0x80040e14.
+Query: "SELECT * FROM PERSONS WHERE (UPPER([FIRST_NAME]) LIKE UPPER(N'%[12/31/25 11:02:22] : Error when deleting.
+Error: 0x80040e21
+[12/31/25 11:03:26] : Error when deleting.
+Error: 0x80040e21
+[12/31/25 11:03:54] : Error when deleting.
+Error: 0x80040e21
+[12/31/25 11:34:13] : Error: Update counter mismatch (Data changed by another user).
+[12/31/25 11:37:11] : Error: Update counter mismatch (Data changed by another user).
+[12/31/25 11:54:07] : Error: Update counter mismatch (Data changed by another user).
+[01/10/26 13:30:47] : Error: Update counter mismatch (Data changed by another user).
+[01/11/26 05:00:25] : Error when inserting.
+Error: 0x80040e2f
+[01/11/26 05:00:25] : [01/11/26 05:01:40] : Error when inserting.
+Error: 0x80040e2f
+[01/11/26 05:03:03] : Error when inserting.
+Error: 0x80040e2f
+[01/11/26 05:03:07] : [01/11/26 19:27:12] : [01/11/26 19:32:15] : [01/11/26 19:57:56] : Error when deleting.
+Error: 0x80040e21
+[01/11/26 19:59:22] : Error when deleting.
+Error: 0x80040e21
+[01/11/26 20:00:31] : Error when deleting.
+Error: 0x80040e21
+[01/13/26 12:11:35] : Unable to get session from Manager
+Error: 0x80004005
+[01/15/26 15:13:07] : Error when updating.
+Error: 0x80040e2f
+[01/15/26 15:13:07] : [01/15/26 15:13:43] : Error when updating.
+Error: 0x80040e2f
+[01/15/26 15:13:43] : [01/15/26 22:34:48] : [01/15/26 22:34:50] : Error when updating.
+Error: 0x80040e2f
+[01/15/26 22:34:50] : [01/16/26 17:23:41] : Error when updating.
+Error: 0x80040e2f
+[01/16/26 17:23:41] : [01/16/26 17:42:09] : Error when updating.
+Error: 0x80040e2f
+[01/16/26 17:42:09] : [01/24/26 09:35:22] : Error when inserting.
+Error: 0x80040e2f
+[01/24/26 09:35:22] : [01/24/26 11:11:10] : Error when selecting the row to delete
+[01/24/26 13:52:40] : Unable to get session from Manager
+Error: 0x80004005
+[01/24/26 19:01:20] : Unable to get session from Manager
+Error: 0x80004005
+[01/25/26 13:48:39] : Error when deleting.
+Error: 0x80040e21
+[01/25/26 13:48:55] : Error when deleting.
+Error: 0x80040e21
+[01/25/26 16:26:05] : Unable to get session from Manager
+Error: 0x80004005
+[01/30/26 12:15:06] : Error when inserting.
+Error: 0x80040e2f
