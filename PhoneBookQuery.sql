@@ -100,58 +100,58 @@ GO
 INSERT	[CITIES] 
 	([UPDATE_COUNTER],[NAME], REGION) 
 VALUES 
-(0,'София','Левскис'),
-(0,'Пловдив', 'Южен'),
-(0,'Варна', 'Североизточен'),
-(0,'Бургас', 'Югоизточен'),
-(0,'Русе', 'Северен'),
-(0,'Стара Загора', 'Южен'),
-(0,'Плевен', 'Северен');
+(0,'РЎРѕС„РёСЏ','Р›РµРІСЃРєРёСЃ'),
+(0,'РџР»РѕРІРґРёРІ', 'Р®Р¶РµРЅ'),
+(0,'Р’Р°СЂРЅР°', 'РЎРµРІРµСЂРѕРёР·С‚РѕС‡РµРЅ'),
+(0,'Р‘СѓСЂРіР°СЃ', 'Р®РіРѕРёР·С‚РѕС‡РµРЅ'),
+(0,'Р СѓСЃРµ', 'РЎРµРІРµСЂРµРЅ'),
+(0,'РЎС‚Р°СЂР° Р—Р°РіРѕСЂР°', 'Р®Р¶РµРЅ'),
+(0,'РџР»РµРІРµРЅ', 'РЎРµРІРµСЂРµРЅ');
 GO
 
 INSERT INTO PHONE_TYPES ([UPDATE_COUNTER],[TYPE]) VALUES 
-(0,'Мобилен'),
-(0,'Домашен'),
-(0,'Служебен'),
-(0,'Факс'),
-(0,'Пейджър');
+(0,'РњРѕР±РёР»РµРЅ'),
+(0,'Р”РѕРјР°С€РµРЅ'),
+(0,'РЎР»СѓР¶РµР±РµРЅ'),
+(0,'Р¤Р°РєСЃ'),
+(0,'РџРµР№РґР¶СЉСЂ');
 
 
 INSERT INTO [PERSONS] 
     ([UPDATE_COUNTER],[FIRST_NAME], [MIDDLE_NAME], [LAST_NAME], [CITIZEN_ID], [CITY_ID], [ADDRESS]) 
 VALUES 
-    (0,'Иван', 'Петров', 'Иванов', '9001010001', 1, 'ул. Витошка 15'),
-    (0,'Мария', 'Георгиева', 'Димитрова', '9202020002', 1, 'бул. България 8'),
-    (0,'Георги', 'Иванов', 'Петров', '9103030003', 2, 'ул. Черно море 12'),
-    (0,'Елена', 'Симеонова', 'Костова', '9304040004', 6, 'бул. Лазур 3'),
-    (0,'Димитър', 'Стефанов', 'Петров', '8805050005', 4, 'бул. Цар Освободител 10'),
-    (0,'Стефан', 'Иванов', 'Георгиев', '9506060006', 5, 'ул. Капитан Райчо 25'),
-    (0,'Анна', 'Петрова', 'Симеонова', '9707070007', 7, 'ул. Шипка 5'),
-    (0,'Николай', 'Георгиев', 'Иванов', '8508080008', 2, 'бул. Демокрация 50'),
-    (0,'Петър', 'Димитров', 'Костов', '9909090009', 2, 'ул. Александровска 120'),
-    (0,'Ивелина', 'Симеонова', 'Димова', '9410100010', 5, 'бул. Никола Петков 30'),
-    (0,'Георги', 'Петров', 'Ангелов', '8011110011', 3, 'пл. Възраждане 1'),
-    (0,'Мария', 'Иванова', 'Тодорова', '9612120012', 2, 'ул. Граф Игнатиев 18');
+    (0,'РРІР°РЅ', 'РџРµС‚СЂРѕРІ', 'РРІР°РЅРѕРІ', '9001010001', 1, 'СѓР». Р’РёС‚РѕС€РєР° 15'),
+    (0,'РњР°СЂРёСЏ', 'Р“РµРѕСЂРіРёРµРІР°', 'Р”РёРјРёС‚СЂРѕРІР°', '9202020002', 1, 'Р±СѓР». Р‘СЉР»РіР°СЂРёСЏ 8'),
+    (0,'Р“РµРѕСЂРіРё', 'РРІР°РЅРѕРІ', 'РџРµС‚СЂРѕРІ', '9103030003', 2, 'СѓР». Р§РµСЂРЅРѕ РјРѕСЂРµ 12'),
+    (0,'Р•Р»РµРЅР°', 'РЎРёРјРµРѕРЅРѕРІР°', 'РљРѕСЃС‚РѕРІР°', '9304040004', 6, 'Р±СѓР». Р›Р°Р·СѓСЂ 3'),
+    (0,'Р”РёРјРёС‚СЉСЂ', 'РЎС‚РµС„Р°РЅРѕРІ', 'РџРµС‚СЂРѕРІ', '8805050005', 4, 'Р±СѓР». Р¦Р°СЂ РћСЃРІРѕР±РѕРґРёС‚РµР» 10'),
+    (0,'РЎС‚РµС„Р°РЅ', 'РРІР°РЅРѕРІ', 'Р“РµРѕСЂРіРёРµРІ', '9506060006', 5, 'СѓР». РљР°РїРёС‚Р°РЅ Р Р°Р№С‡Рѕ 25'),
+    (0,'РђРЅРЅР°', 'РџРµС‚СЂРѕРІР°', 'РЎРёРјРµРѕРЅРѕРІР°', '9707070007', 7, 'СѓР». РЁРёРїРєР° 5'),
+    (0,'РќРёРєРѕР»Р°Р№', 'Р“РµРѕСЂРіРёРµРІ', 'РРІР°РЅРѕРІ', '8508080008', 2, 'Р±СѓР». Р”РµРјРѕРєСЂР°С†РёСЏ 50'),
+    (0,'РџРµС‚СЉСЂ', 'Р”РёРјРёС‚СЂРѕРІ', 'РљРѕСЃС‚РѕРІ', '9909090009', 2, 'СѓР». РђР»РµРєСЃР°РЅРґСЂРѕРІСЃРєР° 120'),
+    (0,'РРІРµР»РёРЅР°', 'РЎРёРјРµРѕРЅРѕРІР°', 'Р”РёРјРѕРІР°', '9410100010', 5, 'Р±СѓР». РќРёРєРѕР»Р° РџРµС‚РєРѕРІ 30'),
+    (0,'Р“РµРѕСЂРіРё', 'РџРµС‚СЂРѕРІ', 'РђРЅРіРµР»РѕРІ', '8011110011', 3, 'РїР». Р’СЉР·СЂР°Р¶РґР°РЅРµ 1'),
+    (0,'РњР°СЂРёСЏ', 'РРІР°РЅРѕРІР°', 'РўРѕРґРѕСЂРѕРІР°', '9612120012', 2, 'СѓР». Р“СЂР°С„ РРіРЅР°С‚РёРµРІ 18');
 
 	INSERT INTO [PHONE_NUMBERS] 
     ([PERSON_ID], [PHONE_TYPE_ID], [PHONE_NUMBER]) 
 VALUES 
-    (2, 1, '0888123456'),  -- Иван - мобилен
-    (2, 2, '029876543'),   -- Иван - домашен
-    (3, 1, '0899111222'),  -- Мария - мобилен
-    (4, 3, '052123456'),   -- Георги - служебен
-    (5, 1, '0877123123'),  -- Елена - мобилен
-    (6, 2, '02111222'),    -- Димитър - домашен
-    (6, 3, '02333444'),    -- Димитър - служебен
-    (7, 1, '0877777777'),  -- Стефан - мобилен
-    (8, 2, '052888999'),   -- Анна - домашен
-    (9, 3, '056112233'),   -- Николай - служебен
-    (10, 1, '0899555666'),  -- Петър - мобилен
-    (10, 2, '082123123'),   -- Петър - домашен
-    (11, 1, '0888999000'), -- Ивелина - мобилен
-    (12, 2, '064555444'),  -- Георги - домашен
-    (13, 1, '0895112233'), -- Мария - мобилен
-    (13, 3, '02444555');   -- Мария - служебен
+    (2, 1, '0888123456'),  -- РРІР°РЅ - РјРѕР±РёР»РµРЅ
+    (2, 2, '029876543'),   -- РРІР°РЅ - РґРѕРјР°С€РµРЅ
+    (3, 1, '0899111222'),  -- РњР°СЂРёСЏ - РјРѕР±РёР»РµРЅ
+    (4, 3, '052123456'),   -- Р“РµРѕСЂРіРё - СЃР»СѓР¶РµР±РµРЅ
+    (5, 1, '0877123123'),  -- Р•Р»РµРЅР° - РјРѕР±РёР»РµРЅ
+    (6, 2, '02111222'),    -- Р”РёРјРёС‚СЉСЂ - РґРѕРјР°С€РµРЅ
+    (6, 3, '02333444'),    -- Р”РёРјРёС‚СЉСЂ - СЃР»СѓР¶РµР±РµРЅ
+    (7, 1, '0877777777'),  -- РЎС‚РµС„Р°РЅ - РјРѕР±РёР»РµРЅ
+    (8, 2, '052888999'),   -- РђРЅРЅР° - РґРѕРјР°С€РµРЅ
+    (9, 3, '056112233'),   -- РќРёРєРѕР»Р°Р№ - СЃР»СѓР¶РµР±РµРЅ
+    (10, 1, '0899555666'),  -- РџРµС‚СЉСЂ - РјРѕР±РёР»РµРЅ
+    (10, 2, '082123123'),   -- РџРµС‚СЉСЂ - РґРѕРјР°С€РµРЅ
+    (11, 1, '0888999000'), -- РРІРµР»РёРЅР° - РјРѕР±РёР»РµРЅ
+    (12, 2, '064555444'),  -- Р“РµРѕСЂРіРё - РґРѕРјР°С€РµРЅ
+    (13, 1, '0895112233'), -- РњР°СЂРёСЏ - РјРѕР±РёР»РµРЅ
+    (13, 3, '02444555');   -- РњР°СЂРёСЏ - СЃР»СѓР¶РµР±РµРЅ
 
 
 	INSERT INTO [PHONE_NUMBERS] 
@@ -160,16 +160,16 @@ VALUES
 (NULL,NULL,'0882993000');
 
 SELECT * FROM CITIES 
--- Подобрения
+-- РџРѕРґРѕР±СЂРµРЅРёСЏ
 INSERT INTO PERSONS (FIRST_NAME, LAST_NAME, CITY_ID)
-VALUES ('Иван', 'Василев', (SELECT ID FROM CITIES WHERE NAME = 'Пловдив'));
+VALUES ('РРІР°РЅ', 'Р’Р°СЃРёР»РµРІ', (SELECT ID FROM CITIES WHERE NAME = 'РџР»РѕРІРґРёРІ'));
 
 INSERT INTO PHONE_NUMBERS (PERSON_ID, PHONE_TYPE_ID, PHONE_NUMBER)
-VALUES (13, (SELECT ID FROM PHONE_TYPES WHERE TYPE = 'Мобилен'), '0887112233');
+VALUES (13, (SELECT ID FROM PHONE_TYPES WHERE TYPE = 'РњРѕР±РёР»РµРЅ'), '0887112233');
 
 -- Updates
 UPDATE [PERSONS]
-SET [ADDRESS] = 'ул. Витошка 20'
+SET [ADDRESS] = 'СѓР». Р’РёС‚РѕС€РєР° 20'
 WHERE [CITIZEN_ID] = '9001010001';
 
 --DELETE
@@ -179,12 +179,12 @@ WHERE [PERSON_ID] = 1 AND [PHONE_TYPE_ID] = 1;
 DELETE FROM [PERSONS]
 WHERE [CITIZEN_ID] = '9001010001';
 
---Извличане на всички телефонни номера за даден клиент:
+--РР·РІР»РёС‡Р°РЅРµ РЅР° РІСЃРёС‡РєРё С‚РµР»РµС„РѕРЅРЅРё РЅРѕРјРµСЂР° Р·Р° РґР°РґРµРЅ РєР»РёРµРЅС‚:
 SELECT [PHONE_TYPE_ID], [PHONE_NUMBER]
 FROM [PHONE_NUMBERS]
 WHERE [PERSON_ID] = 1;
 
---Промени
+--РџСЂРѕРјРµРЅРё
 ALTER TABLE CITIES
 ADD CONSTRAINT UQ_CITIES_NAME_REGION UNIQUE (NAME, REGION);
 
@@ -192,7 +192,7 @@ ALTER TABLE PHONE_NUMBERS
 ADD CONSTRAINT UQ_PERSON_PHONE_TYPE UNIQUE (PERSON_ID, PHONE_TYPE_ID);
 
 
--- Транзакции 
+-- РўСЂР°РЅР·Р°РєС†РёРё 
 
 BEGIN TRANSACTION;
 
@@ -222,11 +222,11 @@ BEGIN CATCH
 
 END CATCH;
 
--- Ако възникне грешка, възстановяване на предишното състояние
+-- РђРєРѕ РІСЉР·РЅРёРєРЅРµ РіСЂРµС€РєР°, РІСЉР·СЃС‚Р°РЅРѕРІСЏРІР°РЅРµ РЅР° РїСЂРµРґРёС€РЅРѕС‚Рѕ СЃСЉСЃС‚РѕСЏРЅРёРµ
 -- ROLLBACK TRANSACTION;
 
 -- Queries
---Проверка и извличане на първото и последното име на хората и типа на телефонния номер:
+--РџСЂРѕРІРµСЂРєР° Рё РёР·РІР»РёС‡Р°РЅРµ РЅР° РїСЉСЂРІРѕС‚Рѕ Рё РїРѕСЃР»РµРґРЅРѕС‚Рѕ РёРјРµ РЅР° С…РѕСЂР°С‚Р° Рё С‚РёРїР° РЅР° С‚РµР»РµС„РѕРЅРЅРёСЏ РЅРѕРјРµСЂ:
 SELECT
         [P].[FIRST_NAME],
         [P].[LAST_NAME],
@@ -238,7 +238,7 @@ SELECT
     INNER JOIN
         [PHONE_TYPES] [PT] ON [PN].[PHONE_TYPE_ID] = [PT].[ID];
 GO
--- Проверка и извличане на името на града и имената на хората, които живеят в този град:
+-- РџСЂРѕРІРµСЂРєР° Рё РёР·РІР»РёС‡Р°РЅРµ РЅР° РёРјРµС‚Рѕ РЅР° РіСЂР°РґР° Рё РёРјРµРЅР°С‚Р° РЅР° С…РѕСЂР°С‚Р°, РєРѕРёС‚Рѕ Р¶РёРІРµСЏС‚ РІ С‚РѕР·Рё РіСЂР°Рґ:
 SELECT
         [C].[NAME],
         [P].[FIRST_NAME],
@@ -249,7 +249,7 @@ SELECT
         [CITIES] [C] ON [P].[CITY_ID] = [C].[ID];
 GO
 
--- Проверка и извличане на типа на телефона, името и фамилията на хората, които имат телефонен номер:
+-- РџСЂРѕРІРµСЂРєР° Рё РёР·РІР»РёС‡Р°РЅРµ РЅР° С‚РёРїР° РЅР° С‚РµР»РµС„РѕРЅР°, РёРјРµС‚Рѕ Рё С„Р°РјРёР»РёСЏС‚Р° РЅР° С…РѕСЂР°С‚Р°, РєРѕРёС‚Рѕ РёРјР°С‚ С‚РµР»РµС„РѕРЅРµРЅ РЅРѕРјРµСЂ:
 SELECT
         [PT].[TYPE],
         [P].[FIRST_NAME],
@@ -262,7 +262,7 @@ SELECT
         [PHONE_TYPES] [PT] ON [PN].[PHONE_TYPE_ID] = [PT].[ID];
 GO
 
---	Проверка и извличане на всички хора, техните ЕГН-та, градове, телефонни номера и типове телефони:
+--	РџСЂРѕРІРµСЂРєР° Рё РёР·РІР»РёС‡Р°РЅРµ РЅР° РІСЃРёС‡РєРё С…РѕСЂР°, С‚РµС…РЅРёС‚Рµ Р•Р“Рќ-С‚Р°, РіСЂР°РґРѕРІРµ, С‚РµР»РµС„РѕРЅРЅРё РЅРѕРјРµСЂР° Рё С‚РёРїРѕРІРµ С‚РµР»РµС„РѕРЅРё:
 SELECT 
         [P].[FIRST_NAME], [P].[LAST_NAME], [P].[CITIZEN_ID], [C].[NAME], [PN].[PHONE_NUMBER], [PT].[TYPE]
     FROM 
@@ -275,7 +275,7 @@ SELECT
         [PHONE_TYPES] [PT] ON [PN].[PHONE_TYPE_ID] = [PT].[ID];
 GO
 
--- Проверка и извличане на всички хора от град "Варна" с телефонни номера и типове телефони:
+-- РџСЂРѕРІРµСЂРєР° Рё РёР·РІР»РёС‡Р°РЅРµ РЅР° РІСЃРёС‡РєРё С…РѕСЂР° РѕС‚ РіСЂР°Рґ "Р’Р°СЂРЅР°" СЃ С‚РµР»РµС„РѕРЅРЅРё РЅРѕРјРµСЂР° Рё С‚РёРїРѕРІРµ С‚РµР»РµС„РѕРЅРё:
 SELECT
         [P].[FIRST_NAME], [P].[LAST_NAME], [P].[CITIZEN_ID], [C].[NAME], [PT].[TYPE]
     FROM
@@ -287,10 +287,10 @@ SELECT
     LEFT JOIN
         [PHONE_TYPES] [PT] ON [PN].[PHONE_TYPE_ID] = [PT].[ID]
     WHERE
-        [C].[NAME] = 'Варна';
+        [C].[NAME] = 'Р’Р°СЂРЅР°';
 GO
--- Домашно
--- 1.1 Изведи информация за person-и, които нямат телефонни номера
+-- Р”РѕРјР°С€РЅРѕ
+-- 1.1 РР·РІРµРґРё РёРЅС„РѕСЂРјР°С†РёСЏ Р·Р° person-Рё, РєРѕРёС‚Рѕ РЅСЏРјР°С‚ С‚РµР»РµС„РѕРЅРЅРё РЅРѕРјРµСЂР°
 SELECT 
         [P].[FIRST_NAME], 
         [P].[LAST_NAME], 
@@ -307,7 +307,7 @@ SELECT
         [PN].[PERSON_ID] IS NULL;
 GO
 
--- 1.2. Изведи информация за телефонни номера, които нямат свързан person:
+-- 1.2. РР·РІРµРґРё РёРЅС„РѕСЂРјР°С†РёСЏ Р·Р° С‚РµР»РµС„РѕРЅРЅРё РЅРѕРјРµСЂР°, РєРѕРёС‚Рѕ РЅСЏРјР°С‚ СЃРІСЉСЂР·Р°РЅ person:
 SELECT 
         [PN].[PHONE_NUMBER], 
         [PT].[TYPE]
@@ -321,7 +321,7 @@ SELECT
         [P].[ID] IS NULL;
 GO
 
--- 1.3 Изведи имената на всички градове, в които има хора с домашни телефони:
+-- 1.3 РР·РІРµРґРё РёРјРµРЅР°С‚Р° РЅР° РІСЃРёС‡РєРё РіСЂР°РґРѕРІРµ, РІ РєРѕРёС‚Рѕ РёРјР° С…РѕСЂР° СЃ РґРѕРјР°С€РЅРё С‚РµР»РµС„РѕРЅРё:
 SELECT DISTINCT
         [C].[NAME]
     FROM 
@@ -333,11 +333,11 @@ SELECT DISTINCT
     INNER JOIN 
         [CITIES] [C] ON [P].[CITY_ID] = [C].[ID]
     WHERE 
-        [PT].[TYPE] = 'Домашен';
+        [PT].[TYPE] = 'Р”РѕРјР°С€РµРЅ';
 GO
 
--- Пример с GroupBy
--- Групиране по тип телефон и извеждане на броя на хората с даден тип телефон:
+-- РџСЂРёРјРµСЂ СЃ GroupBy
+-- Р“СЂСѓРїРёСЂР°РЅРµ РїРѕ С‚РёРї С‚РµР»РµС„РѕРЅ Рё РёР·РІРµР¶РґР°РЅРµ РЅР° Р±СЂРѕСЏ РЅР° С…РѕСЂР°С‚Р° СЃ РґР°РґРµРЅ С‚РёРї С‚РµР»РµС„РѕРЅ:
 SELECT 
         [PT].[TYPE], 
         COUNT([P].[ID]) AS [NUMBER_OF_PEOPLE]
@@ -351,7 +351,7 @@ SELECT
         [PT].[TYPE];
 GO
 
--- Групиране по град и извеждане на броя на хората в този град:
+-- Р“СЂСѓРїРёСЂР°РЅРµ РїРѕ РіСЂР°Рґ Рё РёР·РІРµР¶РґР°РЅРµ РЅР° Р±СЂРѕСЏ РЅР° С…РѕСЂР°С‚Р° РІ С‚РѕР·Рё РіСЂР°Рґ:
 SELECT 
         [C].[NAME], 
         COUNT([P].[ID]) AS [NUMBER_OF_PEOPLE]
@@ -401,16 +401,16 @@ END;
 GO
 
 
--- Таблица CITIES
+-- РўР°Р±Р»РёС†Р° CITIES
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Съдържа информация за градовете, включително име и регион.', 
+    @value = N'РЎСЉРґСЉСЂР¶Р° РёРЅС„РѕСЂРјР°С†РёСЏ Р·Р° РіСЂР°РґРѕРІРµС‚Рµ, РІРєР»СЋС‡РёС‚РµР»РЅРѕ РёРјРµ Рё СЂРµРіРёРѕРЅ.', 
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'CITIES';
 	-- CITIES.ID
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Уникален идентификатор на града.', 
+    @value = N'РЈРЅРёРєР°Р»РµРЅ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР° РіСЂР°РґР°.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'CITIES',
     @level2type = N'COLUMN', @level2name = 'ID';
@@ -418,7 +418,7 @@ EXEC sp_addextendedproperty
 -- CITIES.NAME
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Име на града.', 
+    @value = N'РРјРµ РЅР° РіСЂР°РґР°.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'CITIES',
     @level2type = N'COLUMN', @level2name = 'NAME';
@@ -426,22 +426,22 @@ EXEC sp_addextendedproperty
 -- CITIES.REGION
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Регион, в който се намира градът.', 
+    @value = N'Р РµРіРёРѕРЅ, РІ РєРѕР№С‚Рѕ СЃРµ РЅР°РјРёСЂР° РіСЂР°РґСЉС‚.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'CITIES',
     @level2type = N'COLUMN', @level2name = 'REGION';
 
 
--- Таблица PHONE_TYPES
+-- РўР°Р±Р»РёС†Р° PHONE_TYPES
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Съдържа типовете телефони – например мобилен, домашен, служебен и др.', 
+    @value = N'РЎСЉРґСЉСЂР¶Р° С‚РёРїРѕРІРµС‚Рµ С‚РµР»РµС„РѕРЅРё вЂ“ РЅР°РїСЂРёРјРµСЂ РјРѕР±РёР»РµРЅ, РґРѕРјР°С€РµРЅ, СЃР»СѓР¶РµР±РµРЅ Рё РґСЂ.', 
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'PHONE_TYPES';
 	-- PHONE_TYPES.ID
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Уникален идентификатор на типа телефон.', 
+    @value = N'РЈРЅРёРєР°Р»РµРЅ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР° С‚РёРїР° С‚РµР»РµС„РѕРЅ.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PHONE_TYPES',
     @level2type = N'COLUMN', @level2name = 'ID';
@@ -449,22 +449,22 @@ EXEC sp_addextendedproperty
 -- PHONE_TYPES.NAME
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Име/описание на типа телефон (напр. мобилен, домашен).', 
+    @value = N'РРјРµ/РѕРїРёСЃР°РЅРёРµ РЅР° С‚РёРїР° С‚РµР»РµС„РѕРЅ (РЅР°РїСЂ. РјРѕР±РёР»РµРЅ, РґРѕРјР°С€РµРЅ).', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PHONE_TYPES',
     @level2type = N'COLUMN', @level2name = 'NAME';
 
 
--- Таблица PERSONS
+-- РўР°Р±Р»РёС†Р° PERSONS
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Съдържа информация за хората – включително три имена, ЕГН, адрес и град.', 
+    @value = N'РЎСЉРґСЉСЂР¶Р° РёРЅС„РѕСЂРјР°С†РёСЏ Р·Р° С…РѕСЂР°С‚Р° вЂ“ РІРєР»СЋС‡РёС‚РµР»РЅРѕ С‚СЂРё РёРјРµРЅР°, Р•Р“Рќ, Р°РґСЂРµСЃ Рё РіСЂР°Рґ.', 
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'PERSONS';
 	-- PERSONS.ID
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Уникален идентификатор на човек.', 
+    @value = N'РЈРЅРёРєР°Р»РµРЅ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР° С‡РѕРІРµРє.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PERSONS',
     @level2type = N'COLUMN', @level2name = 'ID';
@@ -472,7 +472,7 @@ EXEC sp_addextendedproperty
 -- PERSONS.FULL_NAME
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Пълното име на човека (три имена).', 
+    @value = N'РџСЉР»РЅРѕС‚Рѕ РёРјРµ РЅР° С‡РѕРІРµРєР° (С‚СЂРё РёРјРµРЅР°).', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PERSONS',
     @level2type = N'COLUMN', @level2name = 'FULL_NAME';
@@ -480,7 +480,7 @@ EXEC sp_addextendedproperty
 -- PERSONS.EGN
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Единен граждански номер (ЕГН) на човека.', 
+    @value = N'Р•РґРёРЅРµРЅ РіСЂР°Р¶РґР°РЅСЃРєРё РЅРѕРјРµСЂ (Р•Р“Рќ) РЅР° С‡РѕРІРµРєР°.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PERSONS',
     @level2type = N'COLUMN', @level2name = 'EGN';
@@ -488,7 +488,7 @@ EXEC sp_addextendedproperty
 -- PERSONS.ADDRESS
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Адрес на човека.', 
+    @value = N'РђРґСЂРµСЃ РЅР° С‡РѕРІРµРєР°.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PERSONS',
     @level2type = N'COLUMN', @level2name = 'ADDRESS';
@@ -498,22 +498,22 @@ EXEC sp_addextendedproperty
 -- PERSONS.CITY_ID
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Идентификатор на града от таблицата CITIES.', 
+    @value = N'РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР° РіСЂР°РґР° РѕС‚ С‚Р°Р±Р»РёС†Р°С‚Р° CITIES.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PERSONS',
     @level2type = N'COLUMN', @level2name = 'CITY_ID';
 
 
--- Таблица PHONE_NUMBERS
+-- РўР°Р±Р»РёС†Р° PHONE_NUMBERS
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Свързва хора с телефонни номера и типове телефони.', 
+    @value = N'РЎРІСЉСЂР·РІР° С…РѕСЂР° СЃ С‚РµР»РµС„РѕРЅРЅРё РЅРѕРјРµСЂР° Рё С‚РёРїРѕРІРµ С‚РµР»РµС„РѕРЅРё.', 
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'PHONE_NUMBERS';
 	-- PHONE_NUMBERS.ID
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Уникален идентификатор на телефонен запис.', 
+    @value = N'РЈРЅРёРєР°Р»РµРЅ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР° С‚РµР»РµС„РѕРЅРµРЅ Р·Р°РїРёСЃ.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PHONE_NUMBERS',
     @level2type = N'COLUMN', @level2name = 'ID';
@@ -521,7 +521,7 @@ EXEC sp_addextendedproperty
 -- PHONE_NUMBERS.PERSON_ID
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Идентификатор на човека от таблицата PERSONS.', 
+    @value = N'РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР° С‡РѕРІРµРєР° РѕС‚ С‚Р°Р±Р»РёС†Р°С‚Р° PERSONS.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PHONE_NUMBERS',
     @level2type = N'COLUMN', @level2name = 'PERSON_ID';
@@ -529,7 +529,7 @@ EXEC sp_addextendedproperty
 -- PHONE_NUMBERS.PHONE_TYPE_ID
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Идентификатор на типа телефон от таблицата PHONE_TYPES.', 
+    @value = N'РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅР° С‚РёРїР° С‚РµР»РµС„РѕРЅ РѕС‚ С‚Р°Р±Р»РёС†Р°С‚Р° PHONE_TYPES.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PHONE_NUMBERS',
     @level2type = N'COLUMN', @level2name = 'PHONE_TYPE_ID';
@@ -537,7 +537,7 @@ EXEC sp_addextendedproperty
 -- PHONE_NUMBERS.PHONE_NUMBER
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
-    @value = N'Телефонният номер.', 
+    @value = N'РўРµР»РµС„РѕРЅРЅРёСЏС‚ РЅРѕРјРµСЂ.', 
     @level0type = N'SCHEMA', @level0name = 'dbo', 
     @level1type = N'TABLE',  @level1name = 'PHONE_NUMBERS',
     @level2type = N'COLUMN', @level2name = 'PHONE_NUMBER';
