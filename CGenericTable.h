@@ -5,18 +5,15 @@
 #include "CSessionManager.h"
 #include "Structures.h"
 
-// Макроси за грешки
 #define DB_TABLE_OPEN_CONNECTION_ERROR_MESSAGE _T("Unable to get session from Manager")
 #define DB_TABLE_QUERY_ERROR_MESSAGE _T("Error when executing query.\n Error: %#lx.\nQuery: \"%s\"")
 #define DB_TABLE_ERROR_CODE_MESSAGE _T("\nError: %#lx")
 
-// SQL Шаблони
 #define DB_TABLE_SELECT_ALL_QUERY  _T("SELECT * FROM %s")
 #define DB_TABLE_SELECT_BY_ID_QUERY  _T("SELECT * FROM %s WHERE [ID] = %d")
 #define DB_TABLE_SELECT_BY_ID_WITH_LOCK_QUERY _T("SELECT * FROM %s WITH(UPDLOCK) WHERE ID = %d")
 #define DB_TABLE_SELECT_NOTHING_QUERY _T("SELECT TOP 0 * FROM %s")
 
-// Съобщения
 #define DB_TABLE_NO_RESULTS_ERROR_MESSAGE _T("Error: No results found.")
 #define DB_TABLE_UPDATE_ERROR_MESSAGE _T("Error when updating.")
 #define DB_TABLE_UPDATE_COUNTER_ERROR_MESSAGE _T("Error: Update counter mismatch (Data changed by another user).")
@@ -27,88 +24,131 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CGenericTable
-//
-// TAccessor: Клас Аксесор (напр. CPhoneNumberAccessor)
-// TRecord:   Структура с данни (напр. PHONE_NUMBERS)
+
+/// <summary>
+/// Базов клас за работа с таблица от БД.
+/// </summary>
+/// <typeparam name="C"> Аксесор съответстващ на таблицата </typeparam>
 template<class TAccessor, class TRecord>
 class CGenericTable : protected CCommand<CAccessor<TAccessor>>
 {
     // Constructor / Destructor
     // ----------------
 public:
-    // Конструктор 1: Използва Singleton сесията (Стандартен)
+    /// <summary> 
+    /// Стандартен конструктор. 
+    /// Инициализира таблицата, като ще използва споделената сесия от CSessionManager (Singleton).
+    /// </summary>
+    /// <param name="recRecord"> Референция към структурата (буфера), в която се записват/читат данните (TRecord). </param>
+    /// <param name="szTableName"> Името на таблицата в базата данни (напр. _T("PHONE_NUMBERS")). </param>
     CGenericTable(TRecord& recRecord, const TCHAR* szTableName);
 
-    // Конструктор 2: Използва външна сесия (за Транзакции)
+    /// <summary> 
+    /// Конструктор с външна сесия.
+    /// Използва се, когато операциите трябва да бъдат част от по-голяма транзакция, 
+    /// управлявана от подадената сесия.
+    /// </summary>
+    /// <param name="recRecord"> Референция към структурата (буфера) за данните. </param>
+    /// <param name="szTableName"> Името на таблицата в базата данни. </param>
+    /// <param name="oSession"> Референция към вече отворена OLE DB сесия. </param>
     CGenericTable(TRecord& recRecord, const TCHAR* szTableName, CSession& oSession);
 
+    /// <summary> Виртуален деструктор </summary>
     virtual ~CGenericTable();
 
     // Methods
     // ----------------
 private:
+    /// <summary> Задава стойностите на m_oDBPropSet </summary>
     void AddPropSetProperties();
 
 protected:
-    // Управление на връзката
+    /// <summary> Отваря нова сесия </summary>
     BOOL OpenConnection();
+
+    /// <summary> Започва транзакция </summary>
     void CloseConnection();
 
-    // Помощни функции
+    /// <summary> Показва съобщение за грешка </summary>
     void ShowErrorMessage(const HRESULT hResult, const CString& strError) const;
+
+    /// <summary> Показва съобщение за грешка </summary>
     void ShowErrorMessage(const CString& strError) const;
+
+    /// <summary> Показва съобщение за грешка </summary>
     void ShowErrorMessageQuery(const HRESULT hResult, const CString& strQuery) const;
 
-    // Изпълнение на заявки
+    /// <summary> Изпълнява заявка </summary>
     BOOL ExecuteQuery(const CString& strQuery);
+
+    /// <summary> Намира запис по зададено ID, изпълнява се в текущата сесия </summary>
     BOOL SelectWhereIDInSession(const long lID, const BOOL bWithLock);
 
-    // Транзакции (Само ако не е външна връзка или ако искаме да управляваме текущата)
+
+    /// <summary> Започва транзакция </summary>
     BOOL StartTransaction();
+
+    /// <summary> Завършва транзакция </summary>
     BOOL Commit();
+
+    /// <summary> Спира транзакция </summary>
     BOOL Abort();
 
 public:
-    // CRUD Операции
+    /// <summary> Получава всички записи и пълни масива </summary>
     BOOL SelectAll(CPtrAutoArray<TRecord>& oAutoArray);
+
+    /// <summary> Намира запис по зададено ID </summary>
     BOOL SelectWhereID(const long lID, TRecord& recRecord);
+
+    /// <summary> Променя запис по ID </summary>
     BOOL UpdateWhereID(const long lID, TRecord& recRecord);
+
+    /// <summary> Създава нов запис </summary>
     BOOL InsertRecord(TRecord& recRecord);
+
+    /// <summary> Изтрива запис по ID </summary>
     BOOL DeleteWhereID(const long lID);
 
     // Members
     // ----------------
 private:
-    TRecord* m_pRecord;         // Указател към структурата с данни
+    /// <summary> Указател към записа </summary>
+    TRecord* m_pRecord;         
 
 protected:
-    BOOL m_bExternalConnection; // Дали ползваме наша сесия или подадена отвън
-    CString m_szTableName;      // Име на таблицата
-    CSession* m_pSession;       // Текущата сесия
-    CDBPropSet m_oDBPropSet;    // Настройки
+    BOOL m_bExternalConnection; 
+
+    /// <summary> Указател към връзката за БД </summary>
+    CString m_szTableName; 
+    /// <summary> Текущата сесия </summary>
+    CSession* m_pSession;       
+    /// <summary> DBPropSet за заявките </summary>
+    CDBPropSet m_oDBPropSet;    
 };
 
 
-// Constructor 1: Default (Singleton Session)
+// Constructor / Destructor
+// ----------------
+
 template<class TAccessor, class TRecord>
 CGenericTable<TAccessor, TRecord>::CGenericTable(TRecord& recRecord, const TCHAR* szTableName)
     : m_oDBPropSet(DBPROPSET_ROWSET)
 {
     m_bExternalConnection = FALSE;
-    m_pSession = nullptr; // Ще го вземем при OpenConnection
+    m_pSession = nullptr;
     m_szTableName = szTableName;
     m_pRecord = &recRecord;
 
     AddPropSetProperties();
 }
 
-// Constructor 2: External Session
 template<class TAccessor, class TRecord>
 CGenericTable<TAccessor, TRecord>::CGenericTable(TRecord& recRecord, const TCHAR* szTableName, CSession& oSession)
     : m_oDBPropSet(DBPROPSET_ROWSET)
 {
     m_bExternalConnection = TRUE;
-    m_pSession = &oSession; // Ползваме подадената сесия
+    m_pSession = &oSession;
     m_szTableName = szTableName;
     m_pRecord = &recRecord;
 
@@ -121,6 +161,9 @@ CGenericTable<TAccessor, TRecord>::~CGenericTable()
     
 }
 
+// Methods
+// ----------------
+
 template<class TAccessor, class TRecord>
 void CGenericTable<TAccessor, TRecord>::AddPropSetProperties()
 {
@@ -130,7 +173,6 @@ void CGenericTable<TAccessor, TRecord>::AddPropSetProperties()
     m_oDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
 }
 
-// Connection Logic
 template<class TAccessor, class TRecord>
 BOOL CGenericTable<TAccessor, TRecord>::OpenConnection()
 {
@@ -152,7 +194,6 @@ void CGenericTable<TAccessor, TRecord>::CloseConnection()
         m_pSession = nullptr;
 }
 
-// Transactions
 template<class TAccessor, class TRecord>
 BOOL CGenericTable<TAccessor, TRecord>::StartTransaction()
 {
@@ -177,7 +218,6 @@ BOOL CGenericTable<TAccessor, TRecord>::Commit()
     return !FAILED(m_pSession->Commit());
 }
 
-// Error Handling
 template<class TAccessor, class TRecord>
 void CGenericTable<TAccessor, TRecord>::ShowErrorMessageQuery(const HRESULT hResult, const CString& strQuery) const
 {
@@ -201,7 +241,6 @@ void CGenericTable<TAccessor, TRecord>::ShowErrorMessage(const CString& strError
     CErrorLogger::LogMessage(strError, TRUE, FALSE);
 }
 
-// Execution
 template<class TAccessor, class TRecord>
 BOOL CGenericTable<TAccessor, TRecord>::ExecuteQuery(const CString& strQuery)
 {
@@ -226,7 +265,6 @@ BOOL CGenericTable<TAccessor, TRecord>::SelectWhereIDInSession(const long lID, c
     return ExecuteQuery(strQuery);
 }
 
-// CRUD Implementations
 template<class TAccessor, class TRecord>
 BOOL CGenericTable<TAccessor, TRecord>::SelectAll(CPtrAutoArray<TRecord>& oAutoArray)
 {

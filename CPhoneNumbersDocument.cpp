@@ -14,13 +14,15 @@
 #define new DEBUG_NEW
 #endif
 
-#define ROW_INDEX_NOT_FOUND -1
-
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneNumbersDocument
 IMPLEMENT_DYNCREATE(CPhoneNumbersDocument, CDocument)
 
 BEGIN_MESSAGE_MAP(CPhoneNumbersDocument, CDocument)
 END_MESSAGE_MAP()
 
+// Constructor / Destructor
+// ----------------
 
 CPhoneNumbersDocument::CPhoneNumbersDocument() noexcept 
 {
@@ -30,38 +32,8 @@ CPhoneNumbersDocument::~CPhoneNumbersDocument()
 {
 }
 
-
-void CPhoneNumbersDocument::RebuildIndexes()
-{
-    m_idxPersons.clear();
-    m_idxPhones.clear();
-    m_idxCities.clear();
-    m_idxPhoneTypes.clear();
-
-    for (int i = 0; i < m_arrPersons.GetCount(); i++)
-    {
-        PERSONS* p = m_arrPersons.GetAt(i);
-        m_idxPersons[p->lID] = p;
-    }
-
-    for (int i = 0; i < m_arrPhoneNumbers.GetCount(); i++)
-    {
-        PHONE_NUMBERS* p = m_arrPhoneNumbers.GetAt(i);
-        m_idxPhones[p->lID] = p;
-    }
-
-    for (int i = 0; i < m_arrCities.GetCount(); i++)
-    {
-        CITIES* p = m_arrCities.GetAt(i);
-        m_idxCities[p->lID] = p;
-    }
-
-    for (int i = 0; i < m_arrPhoneTypes.GetCount(); i++)
-    {
-        PHONE_TYPES* p = m_arrPhoneTypes.GetAt(i);
-        m_idxPhoneTypes[p->lID] = p;
-    }
-}
+// Overrides
+// ----------------
 
 BOOL CPhoneNumbersDocument::OnNewDocument()
 {
@@ -71,7 +43,6 @@ BOOL CPhoneNumbersDocument::OnNewDocument()
     
     return LoadAll();
 }
-
 void CPhoneNumbersDocument::Serialize(CArchive& ar)
 {
     //if (ar.IsStoring())
@@ -96,12 +67,63 @@ void CPhoneNumbersDocument::DeleteContents()
     m_idxPhones.clear();
     m_idxCities.clear();
     m_idxPhoneTypes.clear();
-
     
-
     CDocument::DeleteContents();
 
 }
+
+#ifdef _DEBUG
+void CPhoneNumbersDocument::AssertValid() const
+{
+    CDocument::AssertValid();
+}
+
+void CPhoneNumbersDocument::Dump(CDumpContext& dc) const
+{
+    CDocument::Dump(dc);
+}
+#endif //_DEBUG
+
+// Methods
+// ----------------
+void CPhoneNumbersDocument::RebuildIndexes()
+{
+    m_idxPersons.clear();
+    m_idxPhones.clear();
+    m_idxCities.clear();
+    m_idxPhoneTypes.clear();
+
+    for (int i = 0; i < m_arrPersons.GetCount(); i++)
+    {
+        PERSONS* p = m_arrPersons.GetAt(i);
+        m_idxPersons[p->lID] = p;
+        m_mapUCNs.SetAt(p->szUCN, p->lID);
+    }
+
+    for (int i = 0; i < m_arrPhoneNumbers.GetCount(); i++)
+    {
+        PHONE_NUMBERS* p = m_arrPhoneNumbers.GetAt(i);
+        m_idxPhones[p->lID] = p;
+    }
+
+    for (int i = 0; i < m_arrCities.GetCount(); i++)
+    {
+        CITIES* p = m_arrCities.GetAt(i);
+        m_idxCities[p->lID] = p;
+    }
+
+    for (int i = 0; i < m_arrPhoneTypes.GetCount(); i++)
+    {
+        PHONE_TYPES* p = m_arrPhoneTypes.GetAt(i);
+        m_idxPhoneTypes[p->lID] = p;
+    }
+}
+
+
+
+
+
+
 BOOL CPhoneNumbersDocument::LoadAll()
 {
     DeleteContents();
@@ -119,17 +141,7 @@ BOOL CPhoneNumbersDocument::LoadAll()
 }
 
 
-#ifdef _DEBUG
-void CPhoneNumbersDocument::AssertValid() const
-{
-    CDocument::AssertValid();
-}
 
-void CPhoneNumbersDocument::Dump(CDumpContext& dc) const
-{
-    CDocument::Dump(dc);
-}
-#endif //_DEBUG
 
 
 
@@ -581,7 +593,7 @@ void CPhoneNumbersDocument::ReflectChangePerson(ChangeEntry& entry)
         break;
     }
     case ChangeDelete:
-    {
+    { 
         long lID = pCtxRecord->lID;
         auto it = m_idxPersons.find(lID);
         if (it != m_idxPersons.end())
@@ -642,4 +654,11 @@ void CPhoneNumbersDocument::ReflectChangePhone(ChangeEntry& entry)
     }
 
     delete pCtxRecord;
+}
+BOOL CPhoneNumbersDocument::SelectByNameUCNAddress(CPtrAutoArray<PHONE_NUMBERS>& oAutoArray,
+    const CString& strName,
+    const CString& strUCN,
+    const CString& strAddress)
+{
+    return m_oPhoneNumbersData.SelectByNameUCNAddress(oAutoArray, strName, strUCN, strAddress);
 }

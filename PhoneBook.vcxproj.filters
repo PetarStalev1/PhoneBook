@@ -183,9 +183,6 @@
     <ClInclude Include="CPersonSelectDlg.h">
       <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="CPersonDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CPersonDialogType.h">
       <Filter>Header Files\Enums</Filter>
     </ClInclude>
@@ -194,6 +191,9 @@
     </ClInclude>
     <ClInclude Include="CDialogChangeContext.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPersonDlg.h">
+      <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

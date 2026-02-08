@@ -2,6 +2,14 @@
 #include "CPhoneNumbersData.h"
 #include "CPhoneNumberTable.h"
 
+
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneNumbersData
+
+// Constructor / Destructor
+// ----------------
+
+
 CPhoneNumbersData::CPhoneNumbersData()
 {
 }
@@ -10,6 +18,8 @@ CPhoneNumbersData::~CPhoneNumbersData()
 {
 }
 
+// Methods
+// ----------------
 bool CPhoneNumbersData::SelectAll(CPtrAutoArray<PHONE_NUMBERS>& oPhoneNumbersAutoArray)
 {
 	return m_oPhoneNumbersTable.SelectAll(oPhoneNumbersAutoArray);

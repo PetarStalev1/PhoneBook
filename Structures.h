@@ -21,7 +21,6 @@ const int POSITIONS_POSITION_NAME_LENGTH = 64;
 
 
 
-
 /// <summary>
 /// Дискова структура за таблицата CITIES
 /// </summary>
@@ -133,3 +132,4 @@ typedef CTypedPtrArray<CPtrArray, CITIES*> CCitiesPtrArray;
 typedef CTypedPtrArray<CPtrArray, PERSONS*> CPersonsPtrArray;
 typedef CTypedPtrArray<CPtrArray, PHONE_TYPES*> CPhoneTypesPtrArray;
 typedef CTypedPtrArray<CPtrArray, PHONE_NUMBERS*> CPhoneNumbersPtrArray;
+typedef CMap<CString, LPCTSTR, long, long> CMapUCN;

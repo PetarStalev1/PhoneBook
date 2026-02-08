@@ -3,6 +3,16 @@
 #include <atldbcli.h>
 #include <atltrace.h> 
 
+/////////////////////////////////////////////////////////////////////////////
+// CSessionManager
+
+// Constants
+// ----------------
+
+
+// Constructor / Destructor
+// ----------------
+
 CSessionManager::CSessionManager(): m_bInitialized(false)
 {
 }
@@ -75,4 +85,5 @@ bool CSessionManager::Initialize()
     m_bInitialized = true;
     return true;
 }
-
+// Overrides
+// ----------------

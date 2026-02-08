@@ -4,11 +4,16 @@
 #include "PersonsSearchDialog.h"
 #include "CErrorLogger.h"
 
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneNumbersView
+
+// Constants
+// ----------------
 #define INDEX_BY_ID_ERROR -1
 #define PHONE_BOOK_NUMBER_COLUMN 100
 #define PHONE_BOOK_NUMBER_TYPE 120
 #define PHONE_BOOK_FIRST_AND_LAST_NAME 200
-#define ALL_ITEMS_NUMBER 1000000 // За RedrawItems
+#define ALL_ITEMS_NUMBER 1000000
 
 #define OPERATION_NOT_RECOGNISED_ERROR_MESSAGE _T("Не е разпозната операцията.")
 #define STYLE_ERROR_MESSAGE _T("Грешка при настройката на стила.")
@@ -17,11 +22,7 @@
 #define DELETE_ERROR_MESSAGE _T("Грешка при изтриване на данните.")
 #define INSERT_ERROR_MESSAGE _T("Грешка при въвеждане на данните.")
 #define UPDATE_ERROR_MESSAGE _T("Грешка при редакция на данните.")
-enum PhoneBookViewColumn {
-    PhoneBookViewColumnNumber = 0,
-    PhoneBookViewColumnFirstAndLastName,
-    PhoneBookViewColumnPhoneType
-};
+
 
 IMPLEMENT_DYNCREATE(CPhoneNumbersView, CListView)
 
@@ -37,15 +38,35 @@ BEGIN_MESSAGE_MAP(CPhoneNumbersView, CListView)
     ON_COMMAND(IDR_POPUP_SEARCH, &CPhoneNumbersView::OnContextSearch)
 END_MESSAGE_MAP()
 
+// Constructor / Destructor
+// ----------------
+
 CPhoneNumbersView::CPhoneNumbersView() noexcept {}
 CPhoneNumbersView::~CPhoneNumbersView() {}
 
+// Overrides
+// ----------------
 void CPhoneNumbersView::OnInitialUpdate()
 {
     InitializeListCtrl();
     CListView::OnInitialUpdate();
 }
+CPhoneNumbersDocument* CPhoneNumbersView::GetDocument() const
+{
+    ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CPhoneNumbersDocument)));
+    return (CPhoneNumbersDocument*)m_pDocument;
+}
 
+BOOL CPhoneNumbersView::PreCreateWindow(CREATESTRUCT& cs)
+{
+    return CListView::PreCreateWindow(cs);
+}
+
+void CPhoneNumbersView::OnDraw(CDC* /*pDC*/)
+{
+    CPhoneNumbersDocument* pDoc = GetDocument();
+    ASSERT_VALID(pDoc);
+}
 void CPhoneNumbersView::InitializeListCtrl()
 {
     CListCtrl& list = GetListCtrl();
@@ -210,31 +231,12 @@ void CPhoneNumbersView::OperationDelete(const long lID)
 
 void CPhoneNumbersView::SetListViewItem(int nIndex, const PHONE_NUMBERS& oPhoneNumber)
 {
-    //CListCtrl& list = GetListCtrl();
-    //CPhoneNumbersDocument* pDoc = GetDocument();
-
-    //const PERSONS* pPerson = pDoc->GetPersonByID(oPhoneNumber.lPersonID);
-
-    //const PHONE_TYPES* pPhoneType = pDoc->GetPhoneTypeByID(oPhoneNumber.lPhoneTypeID);
-
-    //if (pPerson == NULL || pPhoneType == NULL)
-    //{
-    //    CErrorLogger::LogMessage(SETTING_ITEM_TEXT_ERROR_MESSAGE, TRUE, TRUE);
-    //    return;
-    //}
-
-    //list.SetItemText(nIndex, PhoneBookViewColumnNumber, oPhoneNumber.szPhoneNumber);
-
-    //CString oFirstAndLastName;
-    //oFirstAndLastName.Format(_T("%s %s"), pPerson->szFirstName, pPerson->szLastName);
-    //list.SetItemText(nIndex, PhoneBookViewColumnFirstAndLastName, oFirstAndLastName);
-
-    //list.SetItemText(nIndex, PhoneBookViewColumnPhoneType, pPhoneType->szType);
 
     CListCtrl& list = GetListCtrl();
-    CPhoneNumbersDocument* pDoc = GetDocument();
-    const PERSONS* pPerson = pDoc->GetPersonByID(oPhoneNumber.lPersonID);
-    const PHONE_TYPES* pPhoneType = pDoc->GetPhoneTypeByID(oPhoneNumber.lPhoneTypeID);
+
+    const PERSONS* pPerson = GetDocument()->GetPersonByID(oPhoneNumber.lPersonID);
+    const PHONE_TYPES* pPhoneType = GetDocument()->GetPhoneTypeByID(oPhoneNumber.lPhoneTypeID);
+
     CString strName = _T("Unknown Person");
     CString strType = _T("Unknown Type");
 
@@ -291,14 +293,15 @@ void CPhoneNumbersView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 void CPhoneNumbersView::OnContextAdd()
 {
    CDialogChangeContext changeCtx;
-    CPhoneNumberDlg dlg(
-        NULL,
-        PhoneNumberDialogTypeAdd,
-        &changeCtx,
-        this
-    );
+   CPhoneNumberDlg oDlg(NULL, 
+       PhoneNumberDialogTypeEdit, &changeCtx,
+       GetDocument()->GetAllCities(),
+       GetDocument()->GetAllPersons(),
+       GetDocument()->GetAllPhoneTypes(),
+       GetDocument()->GetUCNMap(),
+       this);
 
-    if (dlg.DoModal() == IDOK)
+    if (oDlg.DoModal() == IDOK)
     {
         if (!GetDocument()->ApplyChanges(changeCtx))
         {
@@ -315,8 +318,12 @@ void CPhoneNumbersView::OnContextEdit()
 
     PHONE_NUMBERS recEdit = *pConstSelected;
     CDialogChangeContext changeCtx;
-
-    CPhoneNumberDlg oDlg(&recEdit, PhoneNumberDialogTypeEdit, &changeCtx, this);
+    CPhoneNumberDlg oDlg(&recEdit, PhoneNumberDialogTypeEdit, &changeCtx, 
+        GetDocument()->GetAllCities(),
+        GetDocument()->GetAllPersons(),
+        GetDocument()->GetAllPhoneTypes(),
+        GetDocument()->GetUCNMap(),
+        this);
     if (oDlg.DoModal() == IDOK)
     {
         if (!GetDocument()->ApplyChanges(changeCtx))
@@ -334,7 +341,7 @@ void CPhoneNumbersView::OnContextView()
 
     PHONE_NUMBERS recView = *pConstSelected;
 
-    CPhoneNumberDlg oDlg(&recView, PhoneNumberDialogTypeView, NULL, this);
+    CPhoneNumberDlg oDlg(&recView, PhoneNumberDialogTypeView, NULL, NULL, NULL, NULL, NULL, this);
     oDlg.DoModal();
 }
 
@@ -366,6 +373,14 @@ void CPhoneNumbersView::OnContextSearch()
         return;
     }
 
+    if (oDialog.m_strName.IsEmpty() &&
+        oDialog.m_strUCN.IsEmpty() &&
+        oDialog.m_strAddress.IsEmpty())
+    {
+        m_bIsSearch = FALSE;
+        SetInitialData();
+        return;
+    }
     m_bIsSearch = TRUE;
     m_strSearchName = oDialog.m_strName;
     m_strSearchUCN = oDialog.m_strUCN;
@@ -376,7 +391,7 @@ void CPhoneNumbersView::OnContextSearch()
 
 void CPhoneNumbersView::ShowSearch()
 {
-    /*CListCtrl& list = GetListCtrl();
+    CListCtrl& list = GetListCtrl();
     list.DeleteAllItems();
     m_oAutoArray.RemoveAll();
 
@@ -386,31 +401,10 @@ void CPhoneNumbersView::ShowSearch()
     {
         PHONE_NUMBERS* pPhoneNumber = m_oAutoArray.GetAt(i);
         OperationInsert(pPhoneNumber);
-    }*/
+    }
 }
 
 
-
-// ==========================================================================
-// MFC BOILERPLATE
-// ==========================================================================
-
-CPhoneNumbersDocument* CPhoneNumbersView::GetDocument() const
-{
-    ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CPhoneNumbersDocument)));
-    return (CPhoneNumbersDocument*)m_pDocument;
-}
-
-BOOL CPhoneNumbersView::PreCreateWindow(CREATESTRUCT& cs)
-{
-    return CListView::PreCreateWindow(cs);
-}
-
-void CPhoneNumbersView::OnDraw(CDC* /*pDC*/)
-{
-    CPhoneNumbersDocument* pDoc = GetDocument();
-    ASSERT_VALID(pDoc);
-}
 
 #ifdef _DEBUG
 void CPhoneNumbersView::AssertValid() const

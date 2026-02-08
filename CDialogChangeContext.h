@@ -13,7 +13,7 @@ public:
         return m_lNextTempID--;
     }
 
-    // Key = TempID или RealID
+   
     CMap<long, long, ChangeEntry, ChangeEntry&> m_mapChanges;
 
 private:

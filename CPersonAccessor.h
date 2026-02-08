@@ -18,10 +18,10 @@ enum PersonsAccessorColumnEntries
 	PersonsAccessorColumnEntriesFirstName,
 	PersonsAccessorColumnEntriesMiddleName,
 	PersonsAccessorColumnEntriesLastName,
-	PersonsAccessorColumnEntriesCitizenID, // <-- корекция
+	PersonsAccessorColumnEntriesCitizenID, 
 	PersonsAccessorColumnEntriesCityID,
 	PersonsAccessorColumnEntriesAddress
-	// CompanyID и PositionID се махат, защото ги няма в таблицата
+	
 };
 
 /////////////////////////////////////////////////////////////////////////////

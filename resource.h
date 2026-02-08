@@ -22,6 +22,7 @@
 #define IDD_DLG_CITY_EDIT               320
 #define c                               320
 #define IDD_DLG_EDIT_CITY               320
+#define IDC_EDB_PERSONS_DIALOG_UCN      320
 #define IDD_DIALOG1                     322
 #define IDD_DIALOG_PERSON               322
 #define IDR_CONTEXT_PHONENUMBERS        326
@@ -46,11 +47,12 @@
 #define IDC_EDB_PERSONS_FIRST_NAME      1005
 #define IDC_EDB_CITY_REGION             1005
 #define IDC_EDB_SEARCH_UCN              1005
+#define IDC_EDB_PERSONS_DIALOG_MIDDLE_NAME 1005
 #define IDC_EDIT_FAMILY                 1006
 #define IDC_EDB_PERSONS_MIDDLE_NAME     1006
+#define IDC_EDB_PERSONS_DIALOG_LAST_NAME 1006
 #define IDC_EDIT_UGN                    1007
 #define IDC_EDB_PERSONS_LAST_NAME       1007
-#define IDC_EDIT_UCN                    1007
 #define IDC_EDIT_ADDRESS                1008
 #define IDC_EDB_PERSONS_UCN             1008
 #define IDC_CMB_CITIES                  1010
@@ -63,6 +65,9 @@
 #define IDC_EDB_ADDRESS_SEARCH          1021
 #define IDC_VIEW_PERSONS                1022
 #define IDC_LIST_PERSONS                1023
+#define adfdad                          1024
+#define IDC_EDB_PERSONS_DIALOG_FIRSTNAME 1024
+#define IDC_EDB_PERSONS_DIALOG_ADDRESS  1025
 #define ID_32771                        32771
 #define ID_CITYOPERATIONS_32772         32772
 #define ID_CITY_DELETE                  32773
@@ -100,7 +105,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        338
 #define _APS_NEXT_COMMAND_VALUE         32803
-#define _APS_NEXT_CONTROL_VALUE         1024
+#define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

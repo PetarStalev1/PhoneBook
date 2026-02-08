@@ -9,15 +9,25 @@
 #include "Structures.h"
 #include <afxwin.h>
 
+
+/////////////////////////////////////////////////////////////////////////////
+// CCitiesDialog
+
+// Constants
+// ----------------
 #define DIALOG_ADD_NAME _T("Добавяне")
 #define DIALOG_EDIT_NAME _T("Редактиране")
-// CCitiesDialog dialog
 
 IMPLEMENT_DYNAMIC(CCitiesDialog, CDialogEx)
 
+
+// Constructor / Destructor
+// ----------------
+
+
 CCitiesDialog::CCitiesDialog(CITIES* pCity, const CitiesDialogType eCitiesDialogType, CWnd* pParent /*=nullptr*/)
     : CDialogEx(IDD_CITY_DIALOG, pParent),
-    m_eCitiesDialogType(eCitiesDialogType), // Премахната излишна запетая тук
+    m_eCitiesDialogType(eCitiesDialogType),
     m_pCity(pCity)
 {
 }
@@ -25,6 +35,10 @@ CCitiesDialog::CCitiesDialog(CITIES* pCity, const CitiesDialogType eCitiesDialog
 CCitiesDialog::~CCitiesDialog()
 {
 }
+
+
+// Overrides
+// ----------------
 BOOL CCitiesDialog::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -54,6 +68,9 @@ void CCitiesDialog::OnOK()
 
     CDialogEx::OnOK();
 }
+
+// Methods
+// ----------------
 BOOL CCitiesDialog::SetDialogName()
 {
     switch (m_eCitiesDialogType)

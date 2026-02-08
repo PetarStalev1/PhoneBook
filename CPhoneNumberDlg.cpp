@@ -7,11 +7,14 @@
 #include "CPersonView.h"
 #include "CPersonSelectDlg.h"
 
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneNumberDlg
+
 IMPLEMENT_DYNAMIC(CPhoneNumberDlg, CDialogEx)
 
 
 BEGIN_MESSAGE_MAP(CPhoneNumberDlg, CDialogEx)
-    ON_MESSAGE(WM_USER + 1, &CPhoneNumberDlg::OnSelectCity)
+    //ON_MESSAGE(WM_USER + 1, &CPhoneNumberDlg::OnSelectCity)
     ON_NOTIFY(NM_RCLICK, IDC_LSC_PN_CITIES, &CPhoneNumberDlg::OnNMRClickCities)
     ON_COMMAND(ID_CITY_EDIT, &CPhoneNumberDlg::OnContextEditCity)
     ON_COMMAND(ID_CITY_ADD, &CPhoneNumberDlg::OnContextAddCity)
@@ -19,6 +22,10 @@ BEGIN_MESSAGE_MAP(CPhoneNumberDlg, CDialogEx)
     ON_BN_CLICKED(IDC_VIEW_PERSONS, &CPhoneNumberDlg::OnBnClickedViewPersons)
     ON_NOTIFY(NM_CUSTOMDRAW, IDC_LSC_PN_CITIES, &CPhoneNumberDlg::OnNMCustomdrawCities)
 END_MESSAGE_MAP()
+
+
+// Constants
+// ----------------
 #define DIALOG_ADD_NAME _T("Добавяне")
 #define DIALOG_EDIT_NAME _T("Редактиране")
 #define DIALOG_VIEW_NAME _T("Преглед")
@@ -42,21 +49,33 @@ END_MESSAGE_MAP()
 #define COLOR_INSERT_CITY     RGB(200, 255, 200) // светло зелено
 #define COLOR_UPDATE_CITY     RGB(255, 230, 180) // светло оранжево
 
+/// <summary>
+/// enum отговарящ на колона от Cities ListView
+/// </summary>
 enum CitiesColumns {
     CitiesNameColumn = 0,
     CitiesRegionNameColumn
 };
 
 
-
-
-
+// Constructor / Destructor
+// ----------------
 
 CPhoneNumberDlg::CPhoneNumberDlg(PHONE_NUMBERS* pPhoneNumber,
-     const PhoneNumberDialogType ePhoneNumberDialogType, CDialogChangeContext* pCtx, CWnd* pParent)
+    const PhoneNumberDialogType eType,
+    CDialogChangeContext* pCtx,
+    CPtrAutoArray<CITIES>* pCities,       
+    CPtrAutoArray<PERSONS>* pPersons,     
+    CPtrAutoArray<PHONE_TYPES>* pPhoneTypes, 
+    CMapUCN* pUCNs,
+    CWnd* pParent)
     : CDialogEx(IDD_PHONE_NUMBERS_ONEDIT, pParent),
-    m_ePhoneNumberDialogType(ePhoneNumberDialogType), m_pChangeCtx(pCtx)
-
+    m_ePhoneNumberDialogType(eType),
+    m_pChangeCtx(pCtx),
+    m_pAllCities(pCities),
+    m_pAllPersons(pPersons),
+    m_pAllPhoneTypes(pPhoneTypes),
+    m_pMapUCNs(pUCNs)
 {
     if (pPhoneNumber != NULL)
     {
@@ -64,7 +83,6 @@ CPhoneNumberDlg::CPhoneNumberDlg(PHONE_NUMBERS* pPhoneNumber,
     }
     else
     {
-        // Add Mode - нулиране
         m_recPhoneNumber.lID = 0;
         m_recPhoneNumber.lPersonID = 0;
         m_recPhoneNumber.szPhoneNumber[0] = '\0';
@@ -80,6 +98,9 @@ CPhoneNumberDlg::~CPhoneNumberDlg()
 {
 }
 
+// Overrides
+// ----------------
+
 void CPhoneNumberDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialogEx::DoDataExchange(pDX);
@@ -92,80 +113,23 @@ void CPhoneNumberDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_LSC_PN_CITIES, m_lscCity);
     DDX_Control(pDX, IDC_EDB_PERSONS_ADDRESS, m_edbAddress);
     DDX_Control(pDX, IDC_CMB_PHONE_TYPE, m_cmbPhoneNumbersTypes);
-    DDX_Control(pDX, IDC_VIEW_PERSONS, m_btnViewPersons);
    
-}
-
-BOOL CPhoneNumberDlg::PreTranslateMessage(MSG* pMsg)
-{
-    if (pMsg->message == WM_LBUTTONDOWN)  
-    {
-        CWnd* pWnd = CWnd::FromHandle(pMsg->hwnd);
-        if (pWnd)
-        {
-            int nID = pWnd->GetDlgCtrlID();
-
-            if (nID == IDC_EDB_PERSONS_FIRST_NAME ||
-                nID == IDC_EDB_PERSONS_MIDDLE_NAME ||
-                nID == IDC_EDB_PERSONS_LAST_NAME ||
-                nID == IDC_EDB_PERSONS_UCN ||
-                nID == IDC_EDB_PERSONS_ADDRESS)
-            {
-                OnBnClickedViewPersons();
-                return TRUE;
-            }
-        }
-    }
-
-    return CDialogEx::PreTranslateMessage(pMsg);
-}
-
-void CPhoneNumberDlg::GetMergedCities(CPtrArray& arrCities)
-{
-    arrCities.RemoveAll();
-
-    CPhoneNumbersView* pView = getPNView();
-    INT_PTR nCount = pView->GetDocument()->GetCityCount();
-
-    for (INT_PTR i = 0; i < nCount; i++)
-    {
-        const CITIES* pCity = pView->GetDocument()->GetCityAt(i);
-
-        ChangeEntry entry;
-        if (m_pChangeCtx->m_mapChanges.Lookup(pCity->lID, entry) && entry.eEntity == EntityCity)
-        {
-            if (entry.eChange == ChangeDelete) continue; 
-            if (entry.eChange == ChangeUpdate)
-            {
-                arrCities.Add((void*)entry.pRecord);
-                continue;
-            }
-        }
-        arrCities.Add((void*)pCity); 
-    }
-
-    POSITION pos = m_pChangeCtx->m_mapChanges.GetStartPosition();
-    long lKey; ChangeEntry entry;
-    while (pos != NULL)
-    {
-        m_pChangeCtx->m_mapChanges.GetNextAssoc(pos, lKey, entry);
-        if (entry.eEntity == EntityCity && entry.eChange == ChangeInsert)
-        {
-            arrCities.Add((void*)entry.pRecord);
-        }
-    }
 }
 
 BOOL CPhoneNumberDlg::OnInitDialog()
 {
     CDialogEx::OnInitDialog();
 
-    if (m_recPhoneNumber.lPersonID > 0)
+    if (m_recPhoneNumber.lPersonID > 0 && m_pAllPersons)
     {
-        const PERSONS* pFoundPerson = getPNView()->GetDocument()->GetPersonByID(m_recPhoneNumber.lPersonID);
-        if (pFoundPerson != NULL)
+        for (INT_PTR i = 0; i < m_pAllPersons->GetCount(); i++)
         {
-            m_recPerson = *pFoundPerson;
+            PERSONS* pP = m_pAllPersons->GetAt(i);
+            if (pP->lID == m_recPhoneNumber.lPersonID)
+            {
+                m_recPerson = *pP;
+                break;
+            }
         }
     }
 
@@ -186,26 +150,12 @@ BOOL CPhoneNumberDlg::OnInitDialog()
 
     SelectCityInListByID(m_recPerson.lCityID);
 
-    m_recOriginalPerson = m_recPerson;
-    m_recOriginalPhone = m_recPhoneNumber;
     MakeEditLookLikeLabel(m_edbFirstName);
     MakeEditLookLikeLabel(m_edbMiddleName);
     MakeEditLookLikeLabel(m_edbLastName);
     MakeEditLookLikeLabel(m_edbUCN);
     MakeEditLookLikeLabel(m_edbAddress);
     return TRUE;
-}
-
-bool CPhoneNumberDlg::HasCityChanged(const CITIES& oldCity, const CITIES& newCity) const
-{
-    if (_tcscmp(oldCity.szCityName, newCity.szCityName) != 0)
-        return true;
-
-    if (_tcscmp(oldCity.szDistrict, newCity.szDistrict) != 0)
-        return true;
-
-
-    return false;
 }
 
 void CPhoneNumberDlg::OnOK()
@@ -301,6 +251,71 @@ void CPhoneNumberDlg::OnOK()
     CDialogEx::OnOK();
 }
 
+// Methods
+// ----------------
+
+BOOL CPhoneNumberDlg::PreTranslateMessage(MSG* pMsg)
+{
+    if (pMsg->message == WM_LBUTTONDOWN)  
+    {
+        CWnd* pWnd = CWnd::FromHandle(pMsg->hwnd);
+        if (pWnd)
+        {
+            int nID = pWnd->GetDlgCtrlID();
+
+            if (nID == IDC_EDB_PERSONS_FIRST_NAME ||
+                nID == IDC_EDB_PERSONS_MIDDLE_NAME ||
+                nID == IDC_EDB_PERSONS_LAST_NAME ||
+                nID == IDC_EDB_PERSONS_UCN ||
+                nID == IDC_EDB_PERSONS_ADDRESS)
+            {
+                OnBnClickedViewPersons();
+                return TRUE;
+            }
+        }
+    }
+
+    return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CPhoneNumberDlg::GetMergedCities(CPtrArray& arrCities)
+{
+    arrCities.RemoveAll();
+    if (!m_pAllCities) return;
+
+   
+
+
+    for (INT_PTR i = 0; i < m_pAllCities->GetCount(); i++)
+    {
+        const CITIES* pCity = m_pAllCities->GetAt(i);
+
+        ChangeEntry entry;
+        if (m_pChangeCtx->m_mapChanges.Lookup(pCity->lID, entry) && entry.eEntity == EntityCity)
+        {
+            if (entry.eChange == ChangeDelete) continue; 
+            if (entry.eChange == ChangeUpdate)
+            {
+                arrCities.Add((void*)entry.pRecord);
+                continue;
+            }
+        }
+        arrCities.Add((void*)pCity); 
+    }
+
+    POSITION pos = m_pChangeCtx->m_mapChanges.GetStartPosition();
+    long lKey; ChangeEntry entry;
+    while (pos != NULL)
+    {
+        m_pChangeCtx->m_mapChanges.GetNextAssoc(pos, lKey, entry);
+        if (entry.eEntity == EntityCity && entry.eChange == ChangeInsert)
+        {
+            arrCities.Add((void*)entry.pRecord);
+        }
+    }
+}
+
+
 BOOL CPhoneNumberDlg::SetDialogName()
 {
     switch (m_ePhoneNumberDialogType)
@@ -319,7 +334,6 @@ BOOL CPhoneNumberDlg::SetDialogName()
     }
     return TRUE;
 }
-
 
 BOOL CPhoneNumberDlg::SetDialogFields()
 {
@@ -406,22 +420,20 @@ void CPhoneNumberDlg::MakeEditLookLikeLabel(CEdit& ed)
 
 void CPhoneNumberDlg::SetPhoneTypesComboBox()
 {
-    getPNView()->GetDocument()->GetPhoneTypeCount();
+    if (!m_pAllPhoneTypes) return;
 
-    for (INT_PTR nIndexLoop = 0; nIndexLoop < getPNView()->GetDocument()->GetPhoneTypeCount(); nIndexLoop++)
+    for (INT_PTR i = 0; i < m_pAllPhoneTypes->GetCount(); i++)
     {
-        const PHONE_TYPES* pCurrentPhoneType = getPNView()->GetDocument()->GetPhoneTypeAt(nIndexLoop);
+        PHONE_TYPES* pType = m_pAllPhoneTypes->GetAt(i);
+        int nIndex = m_cmbPhoneNumbersTypes.AddString(pType->szType);
+        m_cmbPhoneNumbersTypes.SetItemData(nIndex, (DWORD_PTR)pType->lID);
 
-        CString format;
-        format.Format(_T("%s"), pCurrentPhoneType->szType);
-        int nIndex = m_cmbPhoneNumbersTypes.AddString(format.GetString());
-        m_cmbPhoneNumbersTypes.SetItemData(nIndex, (DWORD_PTR)pCurrentPhoneType->lID);
-
-        if (pCurrentPhoneType->lID == m_recPhoneNumber.lPhoneTypeID) {
+        if (pType->lID == m_recPhoneNumber.lPhoneTypeID) {
             m_cmbPhoneNumbersTypes.SetCurSel(nIndex);
         }
     }
 }
+
 void CPhoneNumberDlg::SetInitialData()
 {
     m_lscCity.DeleteAllItems();
@@ -442,9 +454,9 @@ void CPhoneNumberDlg::SetInitialData()
 
     
 
-    for (INT_PTR nIndexLoop = 0; nIndexLoop < getPNView()->GetDocument()->GetCityCount(); nIndexLoop++)
+    for (INT_PTR nIndexLoop = 0; nIndexLoop < m_pAllCities->GetCount(); nIndexLoop++)
     {
-        const CITIES* pCity = getPNView()->GetDocument()->GetCityAt(nIndexLoop);
+        const CITIES* pCity = m_pAllCities->GetAt(nIndexLoop);
         if (m_ePhoneNumberDialogType == PhoneNumberDialogTypeView)
         {
             if (pCity->lID != lSelectedCityID)
@@ -480,13 +492,7 @@ BOOL CPhoneNumberDlg::SetItemText(const CITIES& recCities, const int nIndexList)
     return 0;
 }
 
-CString CPhoneNumberDlg::CityToString(const CITIES& recCity) const
-{
-    CString strCity = recCity.szCityName;
-    strCity += _T(" - ");
-    strCity += recCity.szDistrict;
-    return strCity;
-}
+
 
 void CPhoneNumberDlg::SetColumns()
 {
@@ -495,26 +501,7 @@ void CPhoneNumberDlg::SetColumns()
     m_lscCity.InsertColumn(CitiesRegionNameColumn, CITIES_REGION, LVCFMT_LEFT, 90);
 }
 
-void CPhoneNumberDlg::OnPopupView()
-{
-   
-}
 
-LRESULT CPhoneNumberDlg::OnSelectCity(WPARAM, LPARAM)
-{
-    if (m_nCityToSelect >= 0)
-    {
-        m_lscCity.SetItemState(
-            m_nCityToSelect,
-            LVIS_SELECTED | LVIS_FOCUSED,
-            LVIS_SELECTED | LVIS_FOCUSED
-        );
-
-        m_lscCity.EnsureVisible(m_nCityToSelect, FALSE);
-        m_lscCity.SetFocus();
-    }
-    return 0;
-}
 
 void CPhoneNumberDlg::OnNMRClickCities(NMHDR* pNMHDR, LRESULT* pResult)
 {
@@ -549,8 +536,14 @@ void CPhoneNumberDlg::OnBnClickedViewPersons()
     CMapUCN mapUCNs;
     GetMergedUCNs(mapUCNs);
 
-    CPersonSelectDlg dlg(getPNView(), m_pChangeCtx, &arrCities, &mapUCNs, m_recPerson.lID, this);
-
+    CPersonSelectDlg dlg(
+        m_pAllPersons,   
+        m_pAllCities,    
+        m_pChangeCtx,    
+        m_pMapUCNs,      
+        m_recPerson.lID,  
+        this
+    );
     if (dlg.DoModal() == IDOK)
     {
         long lSelectedID = dlg.m_lSelectedPersonID;
@@ -564,13 +557,17 @@ void CPhoneNumberDlg::OnBnClickedViewPersons()
             personData = *(PERSONS*)entry.pRecord;
             bFound = true;
         }
-        else
+        else if (m_pAllPersons) 
         {
-            const PERSONS* pPerson = getPNView()->GetDocument()->GetPersonByID(lSelectedID);
-            if (pPerson != NULL)
+            for (INT_PTR i = 0; i < m_pAllPersons->GetCount(); i++)
             {
-                personData = *pPerson;
-                bFound = true;
+                PERSONS* pP = m_pAllPersons->GetAt(i);
+                if (pP->lID == lSelectedID)
+                {
+                    personData = *pP;
+                    bFound = true;
+                    break;
+                }
             }
         }
 
@@ -580,20 +577,15 @@ void CPhoneNumberDlg::OnBnClickedViewPersons()
             m_recPhoneNumber.lPersonID = m_recPerson.lID;
             SetDialogFields();
 
-            // 2. ВАЖНО: Пренареждаме градовете, за да може новият град да отиде най-горе
             ResortCities();
 
-            // 3. Селектираме го (това ще го направи Тъмно син)
             SelectCityInListByID(m_recPerson.lCityID);
 
-            // 4. Насилствено прерисуване, за да сме сигурни, че цветовете (светло синьо) ще се наложат
             m_lscCity.Invalidate();
             m_lscCity.UpdateWindow();
         }
     }
 }
-
-
 
 void CPhoneNumberDlg::OnContextAddCity()
 {
@@ -706,18 +698,6 @@ void CPhoneNumberDlg::OnContextDeleteCity()
     m_lscCity.DeleteItem(nIndex);
 }
 
-CPhoneNumbersView* CPhoneNumberDlg::getPNView()
-{
-    CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetApp()->GetMainWnd();
-    if (pFrame == NULL) return NULL;
-
-  
-    CMDIChildWnd* pChild = (CMDIChildWnd*)pFrame->GetActiveFrame();
-    if (pChild == NULL) return NULL;
-
-    return (CPhoneNumbersView*)pChild->GetActiveView();
-}
-
 void CPhoneNumberDlg::SetReadOnly()
 {
     m_edbPhoneNumber.SetReadOnly(TRUE);
@@ -733,9 +713,11 @@ void CPhoneNumberDlg::SetReadOnly()
 
 void CPhoneNumberDlg::GetMergedUCNs(CMapUCN& mapUCNs)
 {
-    for (INT_PTR nIndex = 0; nIndex < getPNView()->GetDocument()->GetPersonCount(); nIndex++)
+    if (!m_pAllPersons) return;
+
+    for (INT_PTR nIndex = 0; nIndex < m_pAllPersons->GetCount(); nIndex++)
     {
-        const PERSONS* pPerson = getPNView()->GetDocument()->GetPersonAt(nIndex);
+        const PERSONS* pPerson = m_pAllPersons->GetAt(nIndex);
         ChangeEntry entry;
         if (m_pChangeCtx->m_mapChanges.Lookup(pPerson->lID, entry) && entry.eEntity == EntityPerson)
         {
@@ -781,6 +763,7 @@ void CPhoneNumberDlg::SelectCityInListByID(long lID)
         }
     }
 }
+
 int CALLBACK CPhoneNumberDlg::CompareCities_MainDlg(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
     CPhoneNumberDlg* pDlg = reinterpret_cast<CPhoneNumberDlg*>(lParamSort);
@@ -820,11 +803,11 @@ int CALLBACK CPhoneNumberDlg::CompareCities_MainDlg(LPARAM lParam1, LPARAM lPara
 
     return _tcscmp(pCity1->szCityName, pCity2->szCityName);
 }
+
 long CPhoneNumberDlg::GetActiveCityID() const
 {
     return m_recPerson.lCityID;
 }
-
 
 void CPhoneNumberDlg::ResortCities()
 {
@@ -832,6 +815,7 @@ void CPhoneNumberDlg::ResortCities()
     m_lscCity.Invalidate();
     m_lscCity.UpdateWindow();
 }
+
 void CPhoneNumberDlg::OnNMCustomdrawCities(NMHDR* pNMHDR, LRESULT* pResult)
 { 
     LPNMLVCUSTOMDRAW pLVCD = reinterpret_cast<LPNMLVCUSTOMDRAW>(pNMHDR);

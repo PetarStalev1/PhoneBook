@@ -5,6 +5,13 @@
 #define SERVER_NAME _T("DESKTOP-DVRNDC4")
 #define SECURITY_PROVIDER _T("SSPI")
 
+/////////////////////////////////////////////////////////////////////////////
+// CSessionManager
+
+/// <summary>
+/// Singleton клас за връзка с базата данни
+/// </summary>
+
 class CSessionManager
 {
 	// Constants
@@ -19,10 +26,18 @@ private:
 
 	// Methods
 	// ----------------
+private:
+	CSessionManager(const CSessionManager&) = delete;
+	CSessionManager& operator=(const CSessionManager&) = delete;
 public:
+	/// <summary> Метод за достъп до инстанцията на класа </summary>
 	static CSessionManager& GetInstance();
 	CSession* GetSession();
+
+	/// <summary> Достъп до CDataSource </summary>
 	CDataSource* GetDatasource();
+
+	/// <summary> Затваря връзката с базата данни </summary>
 	void Close();
 
 private:
@@ -34,11 +49,11 @@ private:
 	// Members
 	// ----------------
 private:
+	/// <summary> Връзката с БД </summary>
 	CDataSource m_oDataSource;
 	CSession m_oSession;
+
 	bool m_bInitialized;
 
-	CSessionManager(const CSessionManager&) = delete;
-	CSessionManager& operator=(const CSessionManager&) = delete;
 };
 

@@ -14,7 +14,7 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
+	virtual void OnOK();
 	DECLARE_MESSAGE_MAP()
 public:
 	CEdit m_edbName;
@@ -23,7 +23,7 @@ public:
 	CString m_strName;
 	CString m_strUCN;
 	CString m_strAddress;
-	afx_msg void OnBnClickedOk();
+	
 
 };
 

@@ -6,6 +6,9 @@
 #include "CPersonDlg.h"
 #include "CDialogChangeContext.h"
 
+/////////////////////////////////////////////////////////////////////////////
+// CPersonSelectDlg
+
 IMPLEMENT_DYNAMIC(CPersonSelectDlg, CDialogEx)
 BEGIN_MESSAGE_MAP(CPersonSelectDlg, CDialogEx)
     ON_NOTIFY(NM_DBLCLK, IDC_LIST_PERSONS, &CPersonSelectDlg::OnNMDblClkPersons)
@@ -16,16 +19,19 @@ BEGIN_MESSAGE_MAP(CPersonSelectDlg, CDialogEx)
     ON_NOTIFY(NM_CUSTOMDRAW, IDC_LIST_PERSONS, &CPersonSelectDlg::OnNMCustomdrawPersons)
 END_MESSAGE_MAP()
 
-CPersonSelectDlg::CPersonSelectDlg(CPhoneNumbersView* pView, 
-    CDialogChangeContext* pCtx, 
-    CPtrArray* pCities, 
-    CMapUCN* pUCNs, 
-    long lCurrentPersonID, 
+// Constructor / Destructor
+// ----------------
+CPersonSelectDlg::CPersonSelectDlg(
+    CPtrAutoArray<PERSONS>* pAllPersons,
+    CPtrAutoArray<CITIES>* pAllCities,
+    CDialogChangeContext* pCtx,
+    CMapUCN* pUCNs,
+    long lCurrentPersonID,
     CWnd* pParent)
     : CDialogEx(IDD_PERSON_SELECT_DLG, pParent),
-    m_pView(pView),
-    m_pChangeCtx(pCtx),
-    m_pCities(pCities),
+    m_pAllPersons(pAllPersons),
+    m_pAllCities(pAllCities),
+    m_pParentCtx(pCtx),
     m_pUCNs(pUCNs),
     m_lInitialID(lCurrentPersonID)
 {
@@ -34,72 +40,25 @@ CPersonSelectDlg::CPersonSelectDlg(CPhoneNumbersView* pView,
 
 CPersonSelectDlg::~CPersonSelectDlg() {}
 
-void CPersonSelectDlg::FillList()
-{
-    m_lscPersons.DeleteAllItems();
-    int nIndex = 0;
-
-    if (m_pChangeCtx)
-    {
-        POSITION pos = m_pChangeCtx->m_mapChanges.GetStartPosition();
-        long lKey;
-        ChangeEntry entry;
-
-        while (pos)
-        {
-            m_pChangeCtx->m_mapChanges.GetNextAssoc(pos, lKey, entry);
-
-            if (entry.eEntity == EntityPerson && entry.eChange == ChangeInsert)
-            {
-                PERSONS* pPerson = (PERSONS*)entry.pRecord;
-                InsertPersonItem(nIndex, pPerson);
-                nIndex++;
-            }
-        }
-    }
-
-    if (m_pView)
-    {
-        auto* pDoc = m_pView->GetDocument();
-
-        for (INT_PTR i = 0; i < pDoc->GetPersonCount(); i++)
-        {
-            const PERSONS* pDocPerson = pDoc->GetPersonAt(i);
-            const PERSONS* pPersonToShow = pDocPerson; 
-
-            ChangeEntry entry;
-            if (m_pChangeCtx && m_pChangeCtx->m_mapChanges.Lookup(pDocPerson->lID, entry))
-            {
-                if (entry.eEntity == EntityPerson)
-                {
-                    if (entry.eChange == ChangeDelete)
-                    {
-                        continue; 
-                    }
-                    if (entry.eChange == ChangeUpdate)
-                    {
-                        pPersonToShow = (PERSONS*)entry.pRecord;
-                    }
-                }
-            }
-
-            InsertPersonItem(nIndex, pPersonToShow);
-            nIndex++;
-        }
-    }
-}
-
-void CPersonSelectDlg::DoDataExchange(CDataExchange* pDX)
-{
-    CDialogEx::DoDataExchange(pDX);
-    DDX_Control(pDX, IDC_LIST_PERSONS, m_lscPersons);
-}
-
+// Overrides
+// ----------------
 
 BOOL CPersonSelectDlg::OnInitDialog()
 {
     CDialogEx::OnInitDialog();
-    
+
+    if (m_pParentCtx)
+    {
+        POSITION pos = m_pParentCtx->m_mapChanges.GetStartPosition();
+        long lKey;
+        ChangeEntry entry;
+        while (pos)
+        {
+            m_pParentCtx->m_mapChanges.GetNextAssoc(pos, lKey, entry);
+            m_tempCtx.m_mapChanges.SetAt(lKey, entry);
+        }
+    }
+
     m_lscPersons.SetExtendedStyle(
         m_lscPersons.GetExtendedStyle() |
         LVS_EX_FULLROWSELECT |
@@ -109,27 +68,166 @@ BOOL CPersonSelectDlg::OnInitDialog()
     m_lscPersons.InsertColumn(0, _T("Име"), LVCFMT_LEFT, 100);
     m_lscPersons.InsertColumn(1, _T("Фамилия"), LVCFMT_LEFT, 100);
     m_lscPersons.InsertColumn(2, _T("ЕГН"), LVCFMT_LEFT, 100);
-    m_lscPersons.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
     FillList();
 
 
     if (m_lInitialID > 0)
     {
-        int nCount = m_lscPersons.GetItemCount();
-        for (int i = 0; i < nCount; i++)
+        ChangeEntry entry;
+        bool bDeleted = false;
+
+        if (m_tempCtx.m_mapChanges.Lookup(m_lInitialID, entry) && entry.eChange == ChangeDelete)
+            bDeleted = true;
+        else if (m_pParentCtx &&
+            m_pParentCtx->m_mapChanges.Lookup(m_lInitialID, entry) &&
+            entry.eChange == ChangeDelete)
+            bDeleted = true;
+
+        if (!bDeleted)
         {
-            PERSONS* p = (PERSONS*)m_lscPersons.GetItemData(i);
-            if (p && p->lID == m_lInitialID)
+            int nCount = m_lscPersons.GetItemCount();
+            for (int i = 0; i < nCount; i++)
             {
-                m_lscPersons.SetItemState(i, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
-                m_lscPersons.EnsureVisible(i, FALSE);
-                break;
+                PERSONS* p = (PERSONS*)m_lscPersons.GetItemData(i);
+                if (p && p->lID == m_lInitialID)
+                {
+                    m_lscPersons.SetItemState(
+                        i,
+                        LVIS_SELECTED | LVIS_FOCUSED,
+                        LVIS_SELECTED | LVIS_FOCUSED
+                    );
+                    m_lscPersons.EnsureVisible(i, FALSE);
+                    break;
+                }
             }
         }
     }
 
     return TRUE;
+}
+
+void CPersonSelectDlg::OnOK()
+{
+    m_lSelectedPersonID = GetSelectedPersonID();
+
+    if (m_pParentCtx)
+    {
+        POSITION pos = m_tempCtx.m_mapChanges.GetStartPosition();
+        long lKey;
+        ChangeEntry tempEntry;
+
+        while (pos)
+        {
+            m_tempCtx.m_mapChanges.GetNextAssoc(pos, lKey, tempEntry);
+
+            ChangeEntry parentEntry;
+            if (m_pParentCtx->m_mapChanges.Lookup(lKey, parentEntry) &&
+                parentEntry.pRecord != tempEntry.pRecord)
+            {
+                delete (PERSONS*)parentEntry.pRecord;
+            }
+
+            m_pParentCtx->m_mapChanges.SetAt(lKey, tempEntry);
+        }
+
+        m_tempCtx.m_mapChanges.RemoveAll();
+    }
+
+    CDialogEx::OnOK();
+}
+
+void CPersonSelectDlg::OnCancel()
+{
+    m_tempCtx.m_mapChanges.RemoveAll();
+
+    CDialogEx::OnCancel();
+}
+
+void CPersonSelectDlg::DoDataExchange(CDataExchange* pDX)
+{
+    CDialogEx::DoDataExchange(pDX);
+    DDX_Control(pDX, IDC_LIST_PERSONS, m_lscPersons);
+}
+
+// Methods
+// ----------------
+void CPersonSelectDlg::FillList()
+{
+    m_lscPersons.DeleteAllItems();
+    int nIndex = 0;
+
+    POSITION pos;
+    long lKey;
+    ChangeEntry entry;
+
+    // Show from the temp map
+    pos = m_tempCtx.m_mapChanges.GetStartPosition();
+    while (pos)
+    {
+        m_tempCtx.m_mapChanges.GetNextAssoc(pos, lKey, entry);
+
+        if (entry.eEntity == EntityPerson)
+        {
+            // Ако е Insert -> винаги показваме
+            if (entry.eChange == ChangeInsert)
+            {
+                InsertPersonItem(nIndex++, (PERSONS*)entry.pRecord);
+            }
+            // Ако е Update, но ID-то е временно (<= 0), значи сме редактирали 
+            // запис, добавен от родителя. Трябва да го покажем, иначе ще изчезне,
+            // защото го няма в m_pAllPersons.
+            else if (entry.eChange == ChangeUpdate && lKey <= 0)
+            {
+                InsertPersonItem(nIndex++, (PERSONS*)entry.pRecord);
+            }
+        }
+    }
+
+    // Show from the parent map
+    if (m_pParentCtx)
+    {
+        pos = m_pParentCtx->m_mapChanges.GetStartPosition();
+        while (pos)
+        {
+            m_pParentCtx->m_mapChanges.GetNextAssoc(pos, lKey, entry);
+
+            // Ако вече имаме локална промяна за този запис в Temp, пропускаме го
+            ChangeEntry tempEntry;
+            if (m_tempCtx.m_mapChanges.Lookup(lKey, tempEntry))
+                continue;
+
+            if (entry.eEntity == EntityPerson && entry.eChange == ChangeInsert)
+                InsertPersonItem(nIndex++, (PERSONS*)entry.pRecord);
+        }
+    }
+
+    // Show from the array
+    if (m_pAllPersons)
+    {
+        for (INT_PTR i = 0; i < m_pAllPersons->GetCount(); i++)
+        {
+            const PERSONS* pDocPerson = m_pAllPersons->GetAt(i);
+            const PERSONS* pShow = pDocPerson;
+            bool bSkip = false;
+
+            if (m_tempCtx.m_mapChanges.Lookup(pDocPerson->lID, entry))
+            {
+                if (entry.eChange == ChangeDelete) bSkip = true;
+                else if (entry.eChange == ChangeUpdate) pShow = (PERSONS*)entry.pRecord;
+            }
+            else if (m_pParentCtx && m_pParentCtx->m_mapChanges.Lookup(pDocPerson->lID, entry))
+            {
+                if (entry.eChange == ChangeDelete) bSkip = true;
+                else if (entry.eChange == ChangeUpdate) pShow = (PERSONS*)entry.pRecord;
+            }
+
+            if (!bSkip)
+            {
+                InsertPersonItem(nIndex++, pShow);
+            }
+        }
+    }
 }
 
 void CPersonSelectDlg::OnNMRClickPersons(NMHDR* pNMHDR, LRESULT* pResult)
@@ -168,13 +266,14 @@ long CPersonSelectDlg::GetSelectedPersonID()
     }
     return 0;
 }
+
 void CPersonSelectDlg::OnContextAdd()
 {
     PERSONS newPerson;
 
     SecureZeroMemory(&newPerson, sizeof(PERSONS));
-    newPerson.lID = m_pChangeCtx->GenerateTempID();
-    CPersonDlg dlg(&newPerson, m_pCities, m_pUCNs, PersonDialogTypeAdd);
+    newPerson.lID = m_tempCtx.GenerateTempID();
+    CPersonDlg dlg(&newPerson, m_pAllCities, m_pUCNs, &m_tempCtx, PersonDialogTypeAdd);
 
     if (dlg.DoModal() == IDOK)
     {
@@ -201,7 +300,7 @@ void CPersonSelectDlg::OnContextEdit()
     PERSONS editPerson = *pCurrentPerson;
     PERSONS oldPerson = editPerson; 
 
-    CPersonDlg dlg(&editPerson, m_pCities, m_pUCNs, PersonDialogTypeEdit);
+    CPersonDlg dlg(&editPerson, m_pAllCities, m_pUCNs, &m_tempCtx, PersonDialogTypeEdit);
 
     if (dlg.DoModal() == IDOK)
     {
@@ -231,12 +330,12 @@ void CPersonSelectDlg::OnContextDelete()
     {
         ChangeEntry entry;
 
-        if (m_pChangeCtx->m_mapChanges.Lookup(lID, entry))
+        if (m_tempCtx.m_mapChanges.Lookup(lID, entry))
         {
             if (entry.eChange == ChangeInsert)
             {
                 delete (PERSONS*)entry.pRecord; 
-                m_pChangeCtx->m_mapChanges.RemoveKey(lID); 
+                m_tempCtx.m_mapChanges.RemoveKey(lID);
             }
             else
             {
@@ -247,7 +346,7 @@ void CPersonSelectDlg::OnContextDelete()
 
                 entry.eChange = ChangeDelete;
                 entry.pRecord = pDummy;
-                m_pChangeCtx->m_mapChanges.SetAt(lID, entry);
+                m_tempCtx.m_mapChanges.SetAt(lID, entry);
             }
         }
         else
@@ -256,43 +355,14 @@ void CPersonSelectDlg::OnContextDelete()
             PERSONS* pDummy = new PERSONS;
             pDummy->lID = lID;
 
-            ChangeEntry newEntry;
-            newEntry.eEntity = EntityPerson;
-            newEntry.eChange = ChangeDelete;
-            newEntry.pRecord = pDummy;
+            ChangeEntry newEntry{ ChangeDelete ,EntityPerson,pDummy};
 
-            m_pChangeCtx->m_mapChanges.SetAt(lID, newEntry);
+            m_tempCtx.m_mapChanges.SetAt(lID, newEntry);
         }
 
         FillList();
     }
 }
-void CPersonSelectDlg::OnOK()
-{
-    POSITION pos = m_lscPersons.GetFirstSelectedItemPosition();
-    if (pos)
-    {
-        int nIndex = m_lscPersons.GetNextSelectedItem(pos);
-        PERSONS* pPerson = (PERSONS*)m_lscPersons.GetItemData(nIndex);
-
-        if (pPerson != nullptr)
-        {
-            m_lSelectedPersonID = pPerson->lID;
-        }
-        else
-        {
-            m_lSelectedPersonID = 0;
-        }
-        CDialogEx::OnOK();
-    }
-    else
-    {
-        m_lSelectedPersonID = m_lInitialID;
-        //MessageBox(_T("Моля изберете човек!"), _T("Инфо"), MB_OK);
-    }
-}
-
-
 
 void CPersonSelectDlg::OnNMDblClkPersons(NMHDR* pNMHDR, LRESULT* pResult)
 {
@@ -300,37 +370,25 @@ void CPersonSelectDlg::OnNMDblClkPersons(NMHDR* pNMHDR, LRESULT* pResult)
     *pResult = 0;
 }
 
-void CPersonSelectDlg::RefreshPersonList()
-{
-}
-
 void CPersonSelectDlg::RegisterPersonChange(const PERSONS& personData, ChangeType changeType)
 {
-    if (!m_pChangeCtx) return;
-
+    
     ChangeEntry entry;
 
-    if (m_pChangeCtx->m_mapChanges.Lookup(personData.lID, entry))
+    if (m_tempCtx.m_mapChanges.Lookup(personData.lID, entry))
     {
-        if (entry.eEntity == EntityPerson)
-        {
-            PERSONS* pBufferedPerson = (PERSONS*)entry.pRecord;
-            *pBufferedPerson = personData; 
-        } 
+        *(PERSONS*)entry.pRecord = personData;
     }
     else
     {
         PERSONS* pNewRecord = new PERSONS;
         *pNewRecord = personData; 
 
-        ChangeEntry newEntry;
-        newEntry.eEntity = EntityPerson;
-        newEntry.eChange = changeType; 
-        newEntry.pRecord = pNewRecord;
-
-        m_pChangeCtx->m_mapChanges.SetAt(personData.lID, newEntry);
+        ChangeEntry newEntry{ changeType ,EntityPerson,pNewRecord};
+        m_tempCtx.m_mapChanges.SetAt(personData.lID, newEntry);
     }
 }
+
 void CPersonSelectDlg::InsertPersonItem(int nIndex, const PERSONS* pPerson)
 {
     int iItem = m_lscPersons.InsertItem(nIndex, pPerson->szFirstName);
@@ -372,17 +430,14 @@ void CPersonSelectDlg::OnNMCustomdrawPersons(NMHDR* pNMHDR, LRESULT* pResult)
         }
         else
         {
-            if (m_pChangeCtx)
+            ChangeEntry entry;
+            if (m_tempCtx.m_mapChanges.Lookup(pPerson->lID, entry) &&
+                entry.eEntity == EntityPerson)
             {
-                ChangeEntry entry;
-                if (m_pChangeCtx->m_mapChanges.Lookup(pPerson->lID, entry) &&
-                    entry.eEntity == EntityPerson)
-                {
-                    if (entry.eChange == ChangeInsert)
-                        clrBack = RGB(200, 255, 200);
-                    else if (entry.eChange == ChangeUpdate)
-                        clrBack = RGB(255, 230, 180);
-                }
+                if (entry.eChange == ChangeInsert)
+                    clrBack = RGB(200, 255, 200);
+                else if (entry.eChange == ChangeUpdate)
+                    clrBack = RGB(255, 230, 180);
             }
         }
 

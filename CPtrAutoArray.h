@@ -46,6 +46,12 @@ public:
 	/// <summary>  Връща броя на елементите от масива </summary>
 	int GetCount() const;
 
+	/// <summary>
+	///  Връща елемент, базиран на неговото ID
+	/// </summary>
+	/// <param name="lID"></param>
+	/// <returns></returns>
+	T* FindByID(long lID) const;
 	// Overrides
 	// ----------------
 
@@ -150,5 +156,15 @@ int CPtrAutoArray<T>::GetCount() const
 	return m_oCTypedPtrArray.GetCount();
 }
 
+template<class T>
+T* CPtrAutoArray<T>::FindByID(long lID) const
+{
+	for (INT_PTR i = 0; i < GetCount(); i++)
+	{
+		if (GetAt(i)->lID == lID)
+			return GetAt(i);
+	}
+	return nullptr;
+}
 // Overrides
 // ----------------
