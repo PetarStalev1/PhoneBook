@@ -12,17 +12,8 @@ const int PHONE_TYPES_TYPE_LENGTH = 16;
 
 const int PHONE_NUMBERS_NUMBER_LENGTH = 32;
 
-const int USERS_USERNAME_LENGTH = 128;
-const int USERS_PASSWORD_LENGTH = 128;
-
-const int COMPANIES_COMPANY_NAME_LENGTH = 64;
-
-const int POSITIONS_POSITION_NAME_LENGTH = 64;
-
-
-
 /// <summary>
-/// Дискова структура за таблицата CITIES
+/// Г„ГЁГ±ГЄГ®ГўГ  Г±ГІГ°ГіГЄГІГіГ°Г  Г§Г  ГІГ ГЎГ«ГЁГ¶Г ГІГ  CITIES
 /// </summary>
 struct CITIES
 {
@@ -50,7 +41,7 @@ struct CITIES
 };
 
 /// <summary>
-/// Дискова структура за таблицата PERSONS
+/// Г„ГЁГ±ГЄГ®ГўГ  Г±ГІГ°ГіГЄГІГіГ°Г  Г§Г  ГІГ ГЎГ«ГЁГ¶Г ГІГ  PERSONS
 /// </summary>
 struct PERSONS
 {
@@ -84,7 +75,7 @@ struct PERSONS
 };
 
 /// <summary>
-/// Дискова структура за таблицата PHONE_TYPES
+/// Г„ГЁГ±ГЄГ®ГўГ  Г±ГІГ°ГіГЄГІГіГ°Г  Г§Г  ГІГ ГЎГ«ГЁГ¶Г ГІГ  PHONE_TYPES
 /// </summary>
 struct PHONE_TYPES
 {
@@ -100,7 +91,7 @@ struct PHONE_TYPES
 };
 
 /// <summary>
-///  Дискова структура за таблицата PHONE_NUMBERS
+///  Г„ГЁГ±ГЄГ®ГўГ  Г±ГІГ°ГіГЄГІГіГ°Г  Г§Г  ГІГ ГЎГ«ГЁГ¶Г ГІГ  PHONE_NUMBERS
 /// </summary>
 struct PHONE_NUMBERS
 {
